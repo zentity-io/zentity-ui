@@ -1,0 +1,47 @@
+
+################################################################################
+##  zentity-ui server configuration
+################################################################################
+
+# (Required) Hostname and port number on which zentity-ui server will listen.
+zentity-ui.host: localhost
+zentity-ui.port: 2048
+
+# (Optional) Transport encryption between client and zentity-ui server.
+#
+# Supported formats for zentity-ui.tls.key:
+#   .p12
+#
+# Example command to generate a self-signed key:
+#   ./bin/elasticsearch-certutil cert --out $ELASTICSEARCH_HOME/config/certs/key.p12
+zentity-ui.tls.enabled: false
+zentity-ui.tls.key:
+zentity-ui.tls.passphrase:
+
+################################################################################
+##  Elasticsearch client configuration
+################################################################################
+
+# (Required) Elasticsearch URL that zentity-ui server will communicate with.
+elasticsearch.url: http://localhost:9200
+
+# (Optional) Transport encryption between zentity-ui server and Elasticsearch.
+#
+# Supported formats for elasticsearch.tls.key:
+#   .p12
+#
+# Supported values for elasticsearch.tls.verification:
+#   "full", "certificate", "none"
+#
+# Example command to generate a self-signed key:
+#   ./bin/elasticsearch-certutil cert --out $ELASTICSEARCH_HOME/config/certs/key.p12
+elasticsearch.tls.key:
+elasticsearch.tls.passphrase:
+elasticsearch.tls.verification: none
+
+# (Optional) Basic authentication to Elasticsearch.
+elasticsearch.username:
+elasticsearch.password:
+
+# (Optional) Other configurations.
+elasticsearch.timeout: 10000

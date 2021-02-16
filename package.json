@@ -1,0 +1,44 @@
+{
+  "name": "zentity-ui",
+  "version": "0.0.1-experimental",
+  "description": "The official user interface for zentity.",
+  "main": "public/index.html",
+  "author": "Dave Moore",
+  "license": "Apache 2.0",
+  "repository": "https://github.com/zentity-io/zentity-ui",
+  "scripts": {
+    "build": "parcel build public/index.html",
+    "build-watch": "NODE_ENV=development parcel watch public/*",
+    "dev": "node dev.js",
+    "start": "node src/server.js \"@\"",
+    "start-watch": "nodemon src/server.js \"@\""
+  },
+  "dependencies": {
+    "@babel/runtime": "~7.12.0",
+    "@elastic/datemath": "~5.0.0",
+    "@elastic/eui": "~31.5.0",
+    "axios": "~0.21.0",
+    "deep-object-diff": "~1.1.0",
+    "express": "~4.17.0",
+    "js-yaml": "~4.0.0",
+    "lodash": "~4.17.0",
+    "minimist": "~1.2.0",
+    "moment": "~2.29.0",
+    "prop-types": "~15.7.0",
+    "query-string": "~6.13.0",
+    "react": "~17.0.0",
+    "react-dom": "~17.0.0",
+    "react-router-dom": "~5.2.0",
+    "utils": "~0.3.0"
+  },
+  "devDependencies": {
+    "@babel/core": "~7.12.0",
+    "@babel/plugin-transform-runtime": "~7.12.0",
+    "@babel/polyfill": "~7.12.0",
+    "concurrently": "~5.3.0",
+    "nodemon": "~2.0.0",
+    "parcel": "~1.12.0",
+    "parcel-bundler": "~1.12.0",
+    "sass": "~1.32.0"
+  }
+}

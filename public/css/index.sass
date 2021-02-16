@@ -1,0 +1,37 @@
+@import 'node_modules/@elastic/eui/src/global_styling/variables'
+@import 'node_modules/@elastic/eui/src/global_styling/mixins'
+
+@font-face
+  font-family: 'Nunito'
+  src: url('/fonts/Nunito-SemiBold.ttf')
+  font-weight: 400
+  font-style: normal
+
+body
+  @include euiHeaderAffordForFixed
+
+h1, h2, h3, h4, h5, h6
+  font-family: 'Nunito', 'Open Sans', Helvetica, Arial, sans-serif
+
+.euiPage a[target=_blank]:after
+  content: " " url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=)
+
+.euiToastBody
+  white-space: pre-line
+
+/*.zentity-accordion-badge
+  margin-left: 10px*/
+/*.zentity-explore
+  overflow: hidden*/
+.zentity-explore .euiFilterButton-hasActiveFilters
+  font-weight: 500!important
+.zentity-explore .euiBasicTable > div:first-child
+  overflow-x: auto
+.zentity-explore .euiBasicTable table
+  table-layout: auto
+  white-space: nowrap
+
+.euiRangeInput
+  min-width: 85px!important
+.euiIEFlexWrapFix
+  width: 100%
