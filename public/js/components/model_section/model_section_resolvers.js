@@ -44,6 +44,8 @@ export class ModelSectionResolvers extends ModelSectionAbstract {
         if (attributeScore !== null)
           attributeScores.push(attributeScore);
       }
+      if (attributeScores.length === 0)
+        return null;
       const attributeScoresProduct = attributeScores.reduce((a, b)=> a * b, 1);
       const attributeScoresProductInverse = attributeScores.reduce((a, b)=> a * (1.0 - b), 1);
       const resolverScore = attributeScoresProduct / (attributeScoresProduct + attributeScoresProductInverse);
@@ -121,11 +123,18 @@ export class ModelSectionResolvers extends ModelSectionAbstract {
                 </EuiBadge>
               );
             }
-            return (
-              <EuiText>
-                {resolverScore.toFixed(8)} {resolverScoreBadge}
-              </EuiText>
-            );
+            if (resolverScore != null)
+              return (
+                <EuiText>
+                  {resolverScore.toFixed(8)} {resolverScoreBadge}
+                </EuiText>
+              );
+            else
+              return (
+                <EuiText>
+                  <EuiCode>null</EuiCode>
+                </EuiText>
+              );
           } catch (e) {
             console.error(e);
             return (<></>);

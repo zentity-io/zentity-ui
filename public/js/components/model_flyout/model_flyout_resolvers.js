@@ -43,6 +43,8 @@ export class ModelFlyoutResolvers extends ModelFlyoutAbstract {
       if (attributeScore !== null)
         attributeScores.push(attributeScore);
     }
+    if (attributeScores.length === 0)
+      return null;
     const attributeScoresProduct = attributeScores.reduce((a, b)=> a * b, 1);
     const attributeScoresProductInverse = attributeScores.reduce((a, b)=> a * (1.0 - b), 1);
     const resolverScore = attributeScoresProduct / (attributeScoresProduct + attributeScoresProductInverse);
