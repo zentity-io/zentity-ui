@@ -6,6 +6,7 @@ import {
 import 'brace/theme/github';
 import 'brace/mode/json';
 import 'brace/ext/language_tools';
+import 'brace/ext/searchbox';
 
 export function CodeEditor(props) {
   return (
