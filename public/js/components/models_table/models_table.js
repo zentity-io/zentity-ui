@@ -705,14 +705,14 @@ export class ModelsTable extends React.Component {
               Create
             </EuiButton>
           </EuiFlexItem>
-          <EuiFlexItem grow={false}>
+          {/*<EuiFlexItem grow={false}>
             <EuiButton
               iconType="download"
               onClick={this.getModels}
               isDisabled={this.state.loading}>
               Import
             </EuiButton>
-          </EuiFlexItem>
+          </EuiFlexItem>*/}
           <EuiFlexItem grow={false}>
             <EuiButton
               iconType="refresh"
