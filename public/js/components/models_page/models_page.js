@@ -24,7 +24,7 @@ export class ModelsPage extends React.Component {
       <EuiPage className="zentity-models">
         <EuiPageBody>
           <EuiTitle size="l">
-            <h2>Entity models</h2>
+            <h1>Entity models</h1>
           </EuiTitle>
           <EuiSpacer size="m" />
           <ModelsTable onAddToast={this.props.onAddToast} />
