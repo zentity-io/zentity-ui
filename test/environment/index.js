@@ -1,5 +1,7 @@
-const axios = require("axios");
+// Standard packages
 const path = require("path");
+
+// Third-party packages
 const { DockerComposeEnvironment, Wait } = require("testcontainers");
 
 /**
@@ -9,7 +11,7 @@ const { DockerComposeEnvironment, Wait } = require("testcontainers");
  */
 const environment = {
   cluster: null,
-  composeFilePath: path.resolve(__dirname),
+  composeFilePath: path.resolve(__dirname, "..", "resources"),
   composeFile: "docker-compose.yml",
   timeout: 2 * 60 * 1000,
   versionElasticsearch: "7.10.2",
@@ -18,8 +20,6 @@ const environment = {
 
 /**
  * Setup the test cluster.
- *
- * TODO: Make ELASTICSEARCH_VERSION and ZENTITY_VERSION configurable.
  */
 const setup = async () => {
   console.log('\n');
@@ -27,8 +27,8 @@ const setup = async () => {
   environment.cluster = await new DockerComposeEnvironment(environment.composeFilePath, environment.composeFile)
     .withEnv("ELASTICSEARCH_VERSION", environment.versionElasticsearch)
     .withEnv("ZENTITY_VERSION", environment.versionZentity)
-    .withWaitStrategy("es01", Wait.forLogMessage(/mode \[basic\] \- valid/))
     .withStartupTimeout(environment.timeout)
+    .withWaitStrategy("es01", Wait.forLogMessage(/mode \[basic\] \- valid/))
     .up();
 };
 
@@ -38,7 +38,9 @@ const setup = async () => {
 const teardown = async () => {
   console.log('\n');
   console.log('Stopping test cluster...');
-  await environment.cluster.down();
+  await environment.cluster.down({
+    removeVolumes: true
+  });
 };
 
 module.exports = {

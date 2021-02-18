@@ -1,4 +1,4 @@
-const environment = require("./env.js");
+const environment = require('.');
 
 module.exports = async () => {
   await environment.setup();

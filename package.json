@@ -7,12 +7,12 @@
   "license": "Apache 2.0",
   "repository": "https://github.com/zentity-io/zentity-ui",
   "scripts": {
-    "build": "parcel build public/index.html",
+    "build": "NODE_ENV=production parcel build public/index.html",
     "build-watch": "NODE_ENV=development parcel watch public/*",
-    "dev": "node scripts/dev.js",
-    "start": "node src/server.js \"@\"",
-    "start-watch": "nodemon src/server.js \"@\"",
-    "test": "jest"
+    "dev": "NODE_ENV=development node scripts/dev.js",
+    "start": "NODE_ENV=production node src/server.js \"@\"",
+    "start-watch": "NODE_ENV=development nodemon src/server.js \"@\"",
+    "test": "NODE_ENV=development jest --runInBand"
   },
   "dependencies": {
     "@babel/runtime": "~7.12.0",
@@ -40,6 +40,7 @@
     "@babel/preset-react": "~7.12.0",
     "babel-jest": "~26.6.0",
     "concurrently": "~5.3.0",
+    "dayjs": "~1.10.0",
     "jest": "~26.6.0",
     "jest-playwright-preset": "~1.4.0",
     "nodemon": "~2.0.0",

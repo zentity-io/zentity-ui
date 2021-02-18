@@ -1,0 +1,28 @@
+{"index": {"_id": "1", "_index": "zentity_tutorial_4_multiple_resolver_resolution"}}
+{"city": "Washington", "email": "allie@example.net", "first_name": "Allie", "id": "1", "last_name": "Jones", "phone": "202-555-1234", "state": "DC", "street": "123 Main St"}
+{"index": {"_id": "2", "_index": "zentity_tutorial_4_multiple_resolver_resolution"}}
+{"city": "Washington", "email": "", "first_name": "Alicia", "id": "2", "last_name": "Johnson", "phone": "202-123-4567", "state": "DC", "street": "300 Main St"}
+{"index": {"_id": "3", "_index": "zentity_tutorial_4_multiple_resolver_resolution"}}
+{"city": "Washington", "email": "", "first_name": "Allie", "id": "3", "last_name": "Jones", "phone": "", "state": "DC", "street": "123 Main St"}
+{"index": {"_id": "4", "_index": "zentity_tutorial_4_multiple_resolver_resolution"}}
+{"city": "", "email": "", "first_name": "Ally", "id": "4", "last_name": "Joans", "phone": "202-555-1234", "state": "", "street": ""}
+{"index": {"_id": "5", "_index": "zentity_tutorial_4_multiple_resolver_resolution"}}
+{"city": "Arlington", "email": "ej@example.net", "first_name": "Eli", "id": "5", "last_name": "Jonas", "phone": "", "state": "VA", "street": "500 23rd Street"}
+{"index": {"_id": "6", "_index": "zentity_tutorial_4_multiple_resolver_resolution"}}
+{"city": "Washington", "email": "allie@example.net", "first_name": "Allison", "id": "6", "last_name": "Jones", "phone": "202-555-1234", "state": "DC", "street": "123 Main St"}
+{"index": {"_id": "7", "_index": "zentity_tutorial_4_multiple_resolver_resolution"}}
+{"city": "Washington", "email": "", "first_name": "Allison", "id": "7", "last_name": "Smith", "phone": "+1 (202) 555 1234", "state": "DC", "street": "555 Broad St"}
+{"index": {"_id": "8", "_index": "zentity_tutorial_4_multiple_resolver_resolution"}}
+{"city": "Washington", "email": "alan.smith@example.net", "first_name": "Alan", "id": "8", "last_name": "Smith", "phone": "202-000-5555", "state": "DC", "street": "555 Broad St"}
+{"index": {"_id": "9", "_index": "zentity_tutorial_4_multiple_resolver_resolution"}}
+{"city": "Washington", "email": "alan.smith@example.net", "first_name": "Alan", "id": "9", "last_name": "Smith", "phone": "2020005555", "state": "DC", "street": "555 Broad St"}
+{"index": {"_id": "10", "_index": "zentity_tutorial_4_multiple_resolver_resolution"}}
+{"city": "Washington", "email": "", "first_name": "Alison", "id": "10", "last_name": "Smith", "phone": "202-555-9876", "state": "DC", "street": "555 Broad St"}
+{"index": {"_id": "11", "_index": "zentity_tutorial_4_multiple_resolver_resolution"}}
+{"city": "", "email": "allie@example.net", "first_name": "Alison", "id": "11", "last_name": "Jones-Smith", "phone": "2025559867", "state": "", "street": ""}
+{"index": {"_id": "12", "_index": "zentity_tutorial_4_multiple_resolver_resolution"}}
+{"city": "Washington", "email": "allison.j.smith@corp.example.net", "first_name": "Allison", "id": "12", "last_name": "Jones-Smith", "phone": "", "state": "DC", "street": "555 Broad St"}
+{"index": {"_id": "13", "_index": "zentity_tutorial_4_multiple_resolver_resolution"}}
+{"city": "Arlington", "email": "allison.j.smith@corp.example.net", "first_name": "Allison", "id": "13", "last_name": "Jones Smith", "phone": "703-555-5555", "state": "VA", "street": "1 Corporate Way"}
+{"index": {"_id": "14", "_index": "zentity_tutorial_4_multiple_resolver_resolution"}}
+{"city": "Arlington", "email": "elise.jonas@corp.example.net", "first_name": "Elise", "id": "14", "last_name": "Jonas", "phone": "703-555-5555", "state": "VA", "street": "1 Corporate Way"}

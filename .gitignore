@@ -2,6 +2,7 @@
 .cache/
 dist/
 node_modules/
+test/screenshots/
 
 # Files
 **/.DS_Store

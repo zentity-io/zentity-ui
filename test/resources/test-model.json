@@ -1,0 +1,107 @@
+{
+  "attributes": {
+    "first_name": {
+      "type": "string"
+    },
+    "last_name": {
+      "type": "string"
+    },
+    "street": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    }
+  },
+  "resolvers": {
+    "name_street_city_state": {
+      "attributes": ["first_name", "last_name", "street", "city", "state"]
+    },
+    "name_phone": {
+      "attributes": ["first_name", "last_name", "phone"]
+    },
+    "name_email": {
+      "attributes": ["first_name", "last_name", "email"]
+    },
+    "email_phone": {
+      "attributes": ["email", "phone"]
+    }
+  },
+  "matchers": {
+    "simple": {
+      "clause": {
+        "match": {
+          "{{ field }}": "{{ value }}"
+        }
+      }
+    },
+    "fuzzy": {
+      "clause": {
+        "match": {
+          "{{ field }}": {
+            "query": "{{ value }}",
+            "fuzziness": "1"
+          }
+        }
+      }
+    },
+    "exact": {
+      "clause": {
+        "term": {
+          "{{ field }}": "{{ value }}"
+        }
+      }
+    }
+  },
+  "indices": {
+    "zentity_tutorial_4_multiple_resolver_resolution": {
+      "fields": {
+        "first_name.clean": {
+          "attribute": "first_name",
+          "matcher": "fuzzy"
+        },
+        "first_name.phonetic": {
+          "attribute": "first_name",
+          "matcher": "simple"
+        },
+        "last_name.clean": {
+          "attribute": "last_name",
+          "matcher": "fuzzy"
+        },
+        "last_name.phonetic": {
+          "attribute": "last_name",
+          "matcher": "simple"
+        },
+        "street.clean": {
+          "attribute": "street",
+          "matcher": "fuzzy"
+        },
+        "city.clean": {
+          "attribute": "city",
+          "matcher": "fuzzy"
+        },
+        "state.keyword": {
+          "attribute": "state",
+          "matcher": "exact"
+        },
+        "phone.clean": {
+          "attribute": "phone",
+          "matcher": "fuzzy"
+        },
+        "email.keyword": {
+          "attribute": "email",
+          "matcher": "exact"
+        }
+      }
+    }
+  }
+}

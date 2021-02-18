@@ -1,6 +1,6 @@
 module.exports = {
-  globalSetup: './scripts/tests/setup.js',
-  globalTeardown: './scripts/tests/teardown.js',
+  globalSetup: './test/environment/setup.js',
+  globalTeardown: './test/environment/teardown.js',
   preset: 'jest-playwright-preset',
   verbose: true
 }

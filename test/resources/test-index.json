@@ -1,0 +1,141 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0,
+      "analysis" : {
+        "filter" : {
+          "street_suffix_map" : {
+            "pattern" : "(st)",
+            "type" : "pattern_replace",
+            "replacement" : "street"
+          },
+          "phonetic" : {
+            "type" : "phonetic",
+            "encoder" : "nysiis"
+          },
+          "punct_white" : {
+            "pattern" : "\\p{Punct}",
+            "type" : "pattern_replace",
+            "replacement" : " "
+          },
+          "remove_non_digits" : {
+            "pattern" : "[^\\d]",
+            "type" : "pattern_replace",
+            "replacement" : ""
+          }
+        },
+        "analyzer" : {
+          "name_clean" : {
+            "filter" : [
+              "icu_normalizer",
+              "icu_folding",
+              "punct_white"
+            ],
+            "tokenizer" : "standard"
+          },
+          "name_phonetic" : {
+            "filter" : [
+              "icu_normalizer",
+              "icu_folding",
+              "punct_white",
+              "phonetic"
+            ],
+            "tokenizer" : "standard"
+          },
+          "street_clean" : {
+            "filter" : [
+              "icu_normalizer",
+              "icu_folding",
+              "punct_white",
+              "trim"
+            ],
+            "tokenizer" : "keyword"
+          },
+          "phone_clean" : {
+            "filter" : [
+              "remove_non_digits"
+            ],
+            "tokenizer" : "keyword"
+          }
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "keyword"
+      },
+      "first_name": {
+        "type": "text",
+        "fields": {
+          "clean": {
+            "type": "text",
+            "analyzer": "name_clean"
+          },
+          "phonetic": {
+            "type": "text",
+            "analyzer": "name_phonetic"
+          }
+        }
+      },
+      "last_name": {
+        "type": "text",
+        "fields": {
+          "clean": {
+            "type": "text",
+            "analyzer": "name_clean"
+          },
+          "phonetic": {
+            "type": "text",
+            "analyzer": "name_phonetic"
+          }
+        }
+      },
+      "street": {
+        "type": "text",
+        "fields": {
+          "clean": {
+            "type": "text",
+            "analyzer": "street_clean"
+          }
+        }
+      },
+      "city": {
+        "type": "text",
+        "fields": {
+          "clean": {
+            "type": "text",
+            "analyzer": "name_clean"
+          }
+        }
+      },
+      "state": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword"
+          }
+        }
+      },
+      "phone": {
+        "type": "text",
+        "fields": {
+          "clean": {
+            "type": "text",
+            "analyzer": "phone_clean"
+          }
+        }
+      },
+      "email": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword"
+          }
+        }
+      }
+    }
+  }
+}
