@@ -9,7 +9,7 @@
   "scripts": {
     "build": "parcel build public/index.html",
     "build-watch": "NODE_ENV=development parcel watch public/*",
-    "dev": "node dev.js",
+    "dev": "node scripts/dev.js",
     "start": "node src/server.js \"@\"",
     "start-watch": "nodemon src/server.js \"@\"",
     "test": "jest"
@@ -47,6 +47,7 @@
     "parcel-bundler": "~1.12.0",
     "playwright": "~1.8.0",
     "react-test-renderer": "~17.0.0",
-    "sass": "~1.32.0"
+    "sass": "~1.32.0",
+    "testcontainers": "~7.4.0"
   }
 }
