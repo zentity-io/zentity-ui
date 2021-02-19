@@ -27,7 +27,7 @@ if (config.get('elasticsearch.tls.verification')) {
 // Application
 const app = express();
 const statics = [ "/", "/css*", "/fonts*", "/img*", "/js*" ];
-app.use(statics, express.static(path.join(__dirname, "..", "dist")));
+app.use(statics, express.static(path.join(__dirname, "..", "app")));
 app.use(express.json());
 
 /**
@@ -109,7 +109,7 @@ app.all("/es*", function(req, res) {
  * Serve the frontend application.
  */
 app.get("/", function(req, res) {
-  res.sendFile(path.join(__dirname, "..", "dist", "index.html"));
+  res.sendFile(path.join(__dirname, "..", "app", "index.html"));
 });
 
 /**
