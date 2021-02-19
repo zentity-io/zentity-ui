@@ -10,7 +10,7 @@ const yaml = require('js-yaml');
 // Default configuration.
 // Field names that start with '_' are not derived from the config file.
 const config = {
-  '_config.file': './zentity-ui.yml',
+  '_config.file': path.join(__dirname, '..', 'zentity-ui.yml'),
   'elasticsearch.url': 'https://localhost:9200',
   'elasticsearch.tls.verification': 'full',
   'elasticsearch.tls.key': '',
@@ -25,13 +25,28 @@ const config = {
   'zentity-ui.tls.passphrase': '',
 };
 
-// Parse command-line arguments
+// Parse command-line arguments.
+// Track overrides to take precedence over the config file.
 const args = parseArgs(process.argv.slice(2));
+const overrides = {};
 if (args) {
   for (var key in args) {
     switch (key) {
       case 'c':
         config['_config.file'] = args[key];
+        break;
+      case 'E':
+        if (!Array.isArray(args[key]))
+          args[key] = [ args[key] ];
+        for (var i in args[key]) {
+          const overrideParsed = args[key][i].split('=');
+          const overrideKey = overrideParsed[0];
+          if (config[overrideKey] === undefined)
+            console.warn('Unrecognized configuration field: ' + overrideKey);
+          const value = overrideParsed.length > 1 ? overrideParsed.slice(1).join('') : '';
+          config[overrideKey] = value;
+          overrides[overrideKey] = value;
+        }
         break;
     }
   }
@@ -85,6 +100,8 @@ if (configYaml) {
     if (key.startsWith('_'))
       continue;
     if (key in configYaml) {
+      if (overrides[key] !== undefined)
+        continue;
       const value = configYaml[key];
       switch (key) {
 

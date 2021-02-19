@@ -11,8 +11,6 @@ services:
       - node.name=es01
       - cluster.name=zentity-test-cluster
       - cluster.initial_master_nodes=es01
-      #- cluster.initial_master_nodes=es01,es02,es03
-      #- discovery.seed_hosts=es02,es03
       - http.port=9200
       - transport.tcp.port=9300
       - bootstrap.memory_lock=true

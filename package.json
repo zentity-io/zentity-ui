@@ -7,19 +7,19 @@
   "license": "Apache 2.0",
   "repository": "https://github.com/zentity-io/zentity-ui",
   "scripts": {
-    "build": "parcel build src/app/index.html -d dist/app",
+    "build": "parcel build src/app/index.html -d dist/app --target browser && parcel build src/server/server.js -d dist/server --target node --bundle-node-modules",
     "build-watch": "NODE_ENV=development parcel watch src/app/* -d dist/app",
     "clean": "node scripts/clean.js",
     "dev": "yarn build && node scripts/dev.js",
     "start": "node dist/server/server.js \"@\"",
     "start-watch": "nodemon dist/server/server.js \"@\"",
-    "test": "jest --runInBand"
+    "test": "yarn clean && yarn build && jest --runInBand"
   },
   "staticFiles": {
     "staticPath": [
       {
-        "staticPath": "src/server",
-        "staticOutDir": "../server"
+        "staticPath": "zentity-ui.yml",
+        "staticOutDir": ".."
       }
     ],
     "watcherGlob": "**"
