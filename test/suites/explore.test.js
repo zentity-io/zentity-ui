@@ -10,7 +10,7 @@ describe('Explore', () => {
   afterEach(async () => await common.screenshot(page));
 
   it('loads', async () => {
-    await page.goto(config.get('URL_EXPLORE'));
+    await page.goto(common.url('/#/explore'));
     await expect(page).toHaveText('.euiPageBody > h1', 'Explore', config.get('SLA'));
   });
 });

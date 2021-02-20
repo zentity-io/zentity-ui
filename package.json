@@ -13,7 +13,7 @@
     "dev": "yarn build && node scripts/dev.js",
     "start": "node dist/server/server.js \"@\"",
     "start-watch": "nodemon dist/server/server.js \"@\"",
-    "test": "yarn clean && yarn build && jest --runInBand"
+    "test": "yarn build && jest --runInBand"
   },
   "staticFiles": {
     "staticPath": [

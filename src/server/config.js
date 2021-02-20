@@ -26,28 +26,34 @@ const config = {
 };
 
 // Parse command-line arguments.
-// Track overrides to take precedence over the config file.
+// Track overridden config fields, which take precedence over the config file.
 const args = parseArgs(process.argv.slice(2));
 const overrides = {};
 if (args) {
   for (var key in args) {
-    switch (key) {
-      case 'c':
-        config['_config.file'] = args[key];
-        break;
-      case 'E':
-        if (!Array.isArray(args[key]))
-          args[key] = [ args[key] ];
-        for (var i in args[key]) {
-          const overrideParsed = args[key][i].split('=');
-          const overrideKey = overrideParsed[0];
-          if (config[overrideKey] === undefined)
-            console.warn('Unrecognized configuration field: ' + overrideKey);
-          const value = overrideParsed.length > 1 ? overrideParsed.slice(1).join('') : '';
-          config[overrideKey] = value;
-          overrides[overrideKey] = value;
-        }
-        break;
+    if (!Array.isArray(args[key]))
+      args[key] = [ args[key] ];
+    for (var i in args[key]) {
+      switch (key) {
+
+        // -c  Path to configuration file
+        case 'c':
+          config['_config.file'] = args[key][i];
+          break;
+
+        // -E <field>:<value>  Configuration field overrides
+        case 'E':
+          for (var i in args[key]) {
+            const overrideParsed = args[key][i].split('=');
+            const overrideKey = overrideParsed[0];
+            if (config[overrideKey] === undefined)
+              console.warn('Unrecognized configuration field: ' + overrideKey);
+            const value = overrideParsed.length > 1 ? overrideParsed.slice(1).join('') : '';
+            config[overrideKey] = value;
+            overrides[overrideKey] = value;
+          }
+          break;
+      }
     }
   }
 }

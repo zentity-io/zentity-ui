@@ -10,17 +10,17 @@ describe('Home', () => {
   afterEach(async () => await common.screenshot(page));
 
   it('shows buttons for "Models" and "Explore"', async () => {
-    await page.goto(config.get('URL_HOME'));
+    await page.goto(common.url());
     await expect(page).toHaveText('a[href="#/models"]', 'Models', config.get('SLA'));
     await expect(page).toHaveText('a[href="#/explore"]', 'Explore', config.get('SLA'));
   });
   it('navigates to "Models"', async () => {
-    await page.goto(config.get('URL_HOME'));
+    await page.goto(common.url());
     await page.click('a[href="#/models"]');
     await expect(page).toHaveText('.euiPageBody > h1', 'Entity models', config.get('SLA'));
   });
   it('navigates to "Explore"', async () => {
-    await page.goto(config.get('URL_HOME'));
+    await page.goto(common.url());
     await page.click('a[href="#/explore"]');
     await expect(page).toHaveText('.euiPageBody > h1', 'Explore', config.get('SLA'));
   });

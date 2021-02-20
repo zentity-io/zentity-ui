@@ -1,6 +1,8 @@
 version: '3.7'
 services:
-  es01:
+
+  es:
+    container_name: es
     image: "docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION}"
     user: elasticsearch
     command:
@@ -8,9 +10,9 @@ services:
       - -c
       - "elasticsearch-plugin install --batch analysis-icu analysis-phonetic https://zentity.io/releases/zentity-${ZENTITY_VERSION}-elasticsearch-${ELASTICSEARCH_VERSION}.zip && elasticsearch"
     environment:
-      - node.name=es01
+      - node.name=es
       - cluster.name=zentity-test-cluster
-      - cluster.initial_master_nodes=es01
+      - cluster.initial_master_nodes=es
       - http.port=9200
       - transport.tcp.port=9300
       - bootstrap.memory_lock=true
@@ -20,16 +22,36 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - data01:/usr/share/elasticsearch/data
+      - es:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
     networks:
-      - elastic
+      - zentity-ui-test
+
+  zentity-ui:
+    container_name: zentity-ui
+    build:
+      context: ../../
+    image: zentity-ui:test
+    command:
+      - /run.sh
+      - -E
+      - zentity-ui.host=0.0.0.0
+      - -E
+      - elasticsearch.url=http://es:9200
+    volumes:
+      - zentity-ui:/usr/share/zentity-ui/data
+    ports:
+      - 2048:2048
+    networks:
+      - zentity-ui-test
 
 volumes:
-  data01:
+  es:
+    driver: local
+  zentity-ui:
     driver: local
 
 networks:
-  elastic:
+  zentity-ui-test:
     driver: bridge

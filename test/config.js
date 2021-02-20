@@ -1,12 +1,13 @@
+// Standard packages
+const path = require('path');
+
+// Configuration used by the test cluster and test suites.
 const config = {};
-config.URL_CLUSTER = 'http://localhost:9200'; // URL to the test cluster created by ./environment/setup.js
-config.URL_HOME = 'http://localhost:2048';
-config.URL_EXPLORE = config.URL_HOME + '/#/explore';
-config.URL_MODELS = config.URL_HOME + '/#/models';
-config.SLA = { timeout: 2 * 1000 }; // Time it should take for a selector to pass
+config.DOCKER_COMPOSE_FILEPATH = path.resolve(__dirname, "resources");
+config.DOCKER_COMPOSE_FILENAME = 'docker-compose.yml';
+config.DOCKER_COMPOSE_TIMEOUT = 2 * 60 * 1000; // 2 minutes
+config.ELASTICSEARCH_VERSION = '7.10.2';
+config.SLA = { timeout: 2 * 1000 }; // Time it should take for selectors to pass
+config.ZENTITY_VERSION = '1.6.2'; // Version of zentity plugin for Elasticsearch
 
-const get = function(key) {
-  return config[key];
-};
-
-exports.get = get;
+exports.get = (key) => config[key];
