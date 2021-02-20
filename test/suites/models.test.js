@@ -7,7 +7,7 @@ describe('Models', () => {
 
   beforeAll(async () => await common.setup());
   afterAll(async () => await common.teardown());
-  afterEach(async () => await common.screenshot(page));
+  afterEach(async () => await common.screenshot(page, browserName));
 
   it('loads', async () => {
     await page.goto(common.url('/#/models'));

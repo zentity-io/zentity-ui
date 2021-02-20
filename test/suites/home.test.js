@@ -7,7 +7,7 @@ describe('Home', () => {
 
   beforeAll(async () => await common.setup());
   afterAll(async () => await common.teardown());
-  afterEach(async () => await common.screenshot(page));
+  afterEach(async () => await common.screenshot(page, browserName));
 
   it('shows buttons for "Models" and "Explore"', async () => {
     await page.goto(common.url());

@@ -83,11 +83,11 @@ const teardown = async () => {
 /**
  * Save a screenshot of a given page.
  */
-const screenshot = async (page) => {
-  const element = await page.$('body');
+const screenshot = async (page, browserName) => {
+  const element = await page.$(':root');
   const timestamp = process.env.TEST_START_TIME;
   const testname = expect.getState().currentTestName.toLowerCase().replace(/ /g,'-').replace(/[^\w-]+/g,'');
-  const filename = testname + '.png';
+  const filename = `${browserName}-${testname}.png`;
   await element.screenshot({ path: path.join(__dirname, 'screenshots', timestamp, filename) });
 };
 
