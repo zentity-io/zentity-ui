@@ -2,7 +2,7 @@
 
 zentity-ui is the official user interface for **[zentity](https://zentity.io/)**.
 
-**⚠️ Experimental - Not ready for production.** zentity-ui is suitable only for development at this time. Things are expected to be unstable until its first beta release, which is targeted for May 2021. Currently there is little documentation, no automated testing, no semantic versioning, and no settled conventions for its interfaces or configurations.
+**⚠️ Experimental - Not ready for production.** zentity-ui is suitable only for development at this time. Things are expected to be unstable until its first beta release, which is targeted for May 2021. Currently there is little documentation, little automated testing, no semantic versioning, and no settled conventions for its interfaces or configurations.
 
 
 ## Getting started for development
