@@ -114,6 +114,11 @@ const urlEs = (urlPath) => {
 module.exports = {
   screenshot: screenshot,
   setup: setup,
+  setupData: setupData,
+  setupIndex: setupIndex,
+  setupModel: setupModel,
   teardown: teardown,
+  teardownIndex: teardownIndex,
+  teardownModel: teardownModel,
   url: url
 };

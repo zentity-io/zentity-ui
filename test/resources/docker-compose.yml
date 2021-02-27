@@ -13,8 +13,8 @@ services:
       - node.name=es
       - cluster.name=zentity-test-cluster
       - cluster.initial_master_nodes=es
-      - http.port=9200
-      - transport.tcp.port=9300
+      - http.port=9600
+      - transport.tcp.port=9700
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m -ea"
     ulimits:
@@ -24,7 +24,7 @@ services:
     volumes:
       - es:/usr/share/elasticsearch/data
     ports:
-      - 9200:9200
+      - 9600:9600
     networks:
       - zentity-ui-test
 
@@ -35,14 +35,13 @@ services:
     image: zentity-ui:test
     command:
       - /run.sh
-      - -E
-      - zentity-ui.host=0.0.0.0
-      - -E
-      - elasticsearch.url=http://es:9200
+      - "-E zentity-ui.host=0.0.0.0"
+      - "-E zentity-ui.port=2448"
+      - "-E elasticsearch.url=http://es:9600"
     volumes:
       - zentity-ui:/usr/share/zentity-ui/data
     ports:
-      - 2048:2048
+      - 2448:2448
     networks:
       - zentity-ui-test
 

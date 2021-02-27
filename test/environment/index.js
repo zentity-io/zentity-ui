@@ -44,10 +44,12 @@ const setup = async () => {
   // Persist the host names and mapped ports of the containers
   // as environment variables so that the test suites can use them.
   process.env.ELASTICSEARCH_CONTAINER_HOST = environment.cluster.getContainer("es").getHost();
-  process.env.ELASTICSEARCH_CONTAINER_PORT = environment.cluster.getContainer("es").getMappedPort(9200);
+  process.env.ELASTICSEARCH_CONTAINER_PORT = environment.cluster.getContainer("es").getMappedPort(9600);
   process.env.ZENTITY_UI_CONTAINER_HOST = environment.cluster.getContainer("zentity-ui").getHost();
-  process.env.ZENTITY_UI_CONTAINER_PORT = environment.cluster.getContainer("zentity-ui").getMappedPort(2048);
+  process.env.ZENTITY_UI_CONTAINER_PORT = environment.cluster.getContainer("zentity-ui").getMappedPort(2448);
 
+  console.log(`- Elasticsearch running on: ${process.env.ELASTICSEARCH_CONTAINER_HOST}:${process.env.ELASTICSEARCH_CONTAINER_PORT}`);
+  console.log(`- zentity-ui running on:    ${process.env.ZENTITY_UI_CONTAINER_HOST}:${process.env.ZENTITY_UI_CONTAINER_PORT}`);
 };
 
 /**

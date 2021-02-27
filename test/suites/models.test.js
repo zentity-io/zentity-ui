@@ -10,7 +10,7 @@ describe('Models', () => {
   afterEach(async () => await common.screenshot(page, browserName));
 
   it('loads', async () => {
-    await page.goto(common.url('/#/models'));
+    await page.goto(common.url('/#/models'), config.get('SLA'));
     await expect(page).toHaveText('.euiPageBody > h1', 'Entity models', config.get('SLA'));
   });
   it('lists models', async () => {
