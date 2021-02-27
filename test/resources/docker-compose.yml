@@ -35,9 +35,12 @@ services:
     image: zentity-ui:test
     command:
       - /run.sh
-      - "-E zentity-ui.host=0.0.0.0"
-      - "-E zentity-ui.port=2448"
-      - "-E elasticsearch.url=http://es:9600"
+      - -E
+      - zentity-ui.host=0.0.0.0
+      - -E
+      - zentity-ui.port=2448
+      - -E
+      - elasticsearch.url=http://es:9600
     volumes:
       - zentity-ui:/usr/share/zentity-ui/data
     ports:
