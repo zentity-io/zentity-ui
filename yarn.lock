@@ -921,10 +921,10 @@
   dependencies:
     tslib "^1.9.3"
 
-"@elastic/eui@~31.5.0":
-  version "31.5.0"
-  resolved "https://registry.yarnpkg.com/@elastic/eui/-/eui-31.5.0.tgz#c8a1c30d6fb049d4474afa92869f18cd72e6a19b"
-  integrity sha512-Wyp6NavbFPGHRRl3ZCe1ZSIFr3U43K7ab1zbqKnhREJdet9aia+XCKS2BlKOEnPoIYVJCyJqdqdMq0/M/KAteg==
+"@elastic/eui@~31.9.0":
+  version "31.9.1"
+  resolved "https://registry.yarnpkg.com/@elastic/eui/-/eui-31.9.1.tgz#8c5eeccf47eb20590cfab47a40156718d8f11e9a"
+  integrity sha512-+IspxX6x+S2myfB2s8XgE75EYOOYFcmWfuvLBhCYwsH6MGPVEqYShLXe7HadAtYaLxuKsxLeIuyPF7tm3t1iBQ==
   dependencies:
     "@types/chroma-js" "^2.0.0"
     "@types/lodash" "^4.14.160"
@@ -2037,7 +2037,7 @@ bn.js@^5.0.0, bn.js@^5.1.1:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.1.3.tgz#beca005408f642ebebea80b042b4d18d2ac0ee6b"
   integrity sha512-GkTiFpjFtUzU9CbMeJ5iazkCzGL3jrhzerzZIuqLABjbwRaFt33I9tUdSNryIptM+RxDet6OKm2WnLXzW51KsQ==
 
-body-parser@1.19.0:
+body-parser@1.19.0, body-parser@~1.19.0:
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.19.0.tgz#96b2709e57c9c4e09a6fd66a8fd979844f69f08a"
   integrity sha512-dhEPs72UPbDnAQJ9ZKMNTP6ptJaionhP5cBb541nXPlW60Jepo9RV/a4fX4XWW9CuFNK22krhrj1+rgzifNCsw==

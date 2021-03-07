@@ -6,6 +6,7 @@ const url = require('url');
 
 // Third-party packages
 const axios = require('axios');
+const bodyParser = require('body-parser');
 const express = require('express');
 
 // Configuration
@@ -28,7 +29,18 @@ if (config.get('elasticsearch.tls.verification')) {
 const app = express();
 const statics = [ "/", "/css*", "/fonts*", "/img*", "/js*" ];
 app.use(statics, express.static(path.join(__dirname, "..", "app")));
-app.use(express.json());
+app.use(function(req, res, next) {
+  var rawBody = '';
+  req.setEncoding('utf8');
+  req.on('data', function(chunk) {
+    rawBody += chunk;
+  });
+  req.on('end', function() {
+    req.rawBody = rawBody;
+    next();
+  });
+});
+app.use(bodyParser.json());
 
 /**
  * Send a request to Elasticsearch.
@@ -38,6 +50,7 @@ const esRequest = function(opts) {
     method: opts.method,
     url: config.get('elasticsearch.url') + opts.path,
     params: opts.params,
+    headers: opts.headers,
     data: opts.data,
     timeout: config.get('elasticsearch.timeout'),
     transformResponse: function(res) {
@@ -61,7 +74,8 @@ app.all("/es*", function(req, res) {
     method: req.method,
     path: req.params[0],
     params: req.query,
-    data: req.body
+    headers: req.headers,
+    data: req.headers['Content-Type'] === 'application/json' ? req.body : req.rawBody
   };
   return esRequest(opts).then(function(esResponse) {
     // Return a response from Elasticsearch.

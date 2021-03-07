@@ -79,6 +79,7 @@ const request = function(path, opts) {
     method: opts.method,
     url: ZENTITY_PROXY_ENDPOINT + path,
     params: opts.params,
+    headers: opts.headers || {},
     data: opts.data,
     timeout: 60000, // TODO: Make configurable
     transformResponse: (res) => {

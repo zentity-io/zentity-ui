@@ -37,7 +37,8 @@ export class ModelsTable extends React.Component {
       modalCreate: null,
       modalCreateName: '',
       modalDelete: null,
-      models: null
+      models: null,
+      selections: []
     };
 
     this.getModels = this.getModels.bind(this);
@@ -57,6 +58,7 @@ export class ModelsTable extends React.Component {
     this.onSubmitClone = this.onSubmitClone.bind(this);
     this.onSubmitCreate = this.onSubmitCreate.bind(this);
     this.onSubmitDelete = this.onSubmitDelete.bind(this);
+    this.onSubmitDeleteMany = this.onSubmitDeleteMany.bind(this);
     this.everSearched = this.everSearched.bind(this);
   };
 
@@ -418,6 +420,161 @@ export class ModelsTable extends React.Component {
       });
   }
 
+  onSubmitDeleteMany(models) {
+    console.debug('Delete models: Start');
+
+    // Create bulk payload
+    const items = [];
+    for (var i in this.state.selections) {
+      const model = this.state.selections[i];
+      const action = JSON.stringify({ delete: { entity_type: model._id }});
+      const payload = '{}';
+      items.push(action);
+      items.push(payload);
+    }
+    const ndjson = items.join('\n');
+    const opts = {
+      data: ndjson,
+      headers: {
+        'Content-Type': 'application/x-ndjson'
+      }
+    }
+
+    client.post('/_zentity/models/_bulk', opts)
+      .then((response) => {
+        try {
+          const itemsSuccess = [];
+          const itemsFailure = [];
+          var numItems = 0;
+          var numSuccess = 0;
+          var numFailure = 0;
+
+          // Gather deleted items
+          const deleted = {};
+          for (var i in response.data.items) {
+            const item = response.data.items[i];
+            const _id = this.state.selections[i]._id;
+            if (item.delete) {
+              if (!item.delete.error) {
+                deleted[_id] = true;
+                itemsSuccess.push(<div key="_id"><EuiCode>{_id}</EuiCode></div>);
+                numSuccess++;
+              } else {
+                itemsFailure.push(<div key="_id"><EuiCode>{_id}</EuiCode></div>);
+                numFailure++;
+              }
+            }
+            numItems++;
+          }
+
+          // Request successful
+          if (numSuccess > 0) {
+            if (numFailure > 0)
+              console.debug('Delete models: Partial success');
+            else
+              console.debug('Delete models: Success');
+            console.debug(response);
+
+            // Remove deleted models from view
+            const models = [];
+            for (var m in this.state.models) {
+              if (deleted[this.state.models[m]._id])
+                continue;
+              models.push(this.state.models[m]);
+            }
+            this.setState({
+              loading: false,
+              modalDelete: null,
+              models: models
+            }, () => {
+              console.debug('Delete models: State');
+              console.debug(this.state);
+
+              // Notify the user
+              if (numFailure === 0) {
+                this.props.onAddToast({
+                  title: 'Deleted ' + numSuccess + ' models',
+                  color: 'success',
+                  iconType: 'check',
+                  text: itemsSuccess
+                });
+              } else if (numSuccess > 0) {
+                this.props.onAddToast({
+                  title: 'Deleted ' + numSuccess + ' of ' + numItems + ' models',
+                  color: 'warning',
+                  iconType: 'alert',
+                  text: (
+                    <div>
+                      <div><b>Success</b></div>
+                      <div>{itemsSuccess}</div>
+                      <EuiSpacer size="m" />
+                      <div><b>Failure</b></div>
+                      <div>{itemsFailure}</div>
+                    </div>
+                  )
+                });
+              } else {
+                this.props.onAddToast({
+                  title: 'Failed to delete models',
+                  color: 'danger',
+                  iconType: 'alert',
+                  text: itemsFailure
+                });
+              }
+            });
+
+          // Request failure
+          } else {
+            console.warn('Delete models: Error');
+            console.error(response);
+            this.setState({
+              loading: false
+            }, () => {
+              console.log('Delete models: State');
+              console.log(this.state);
+
+              // Notify the user
+              this.props.onAddToast({
+                title: 'Failed to delete models',
+                color: 'danger',
+                iconType: 'alert',
+                text: itemsFailure
+              });
+            });
+          }
+
+        // Response handling failed
+        } catch (error) {
+          console.warn('Delete models: Error');
+          console.error(error);
+          this.setState({
+            loading: false
+          }, () => {
+            console.log('Delete models: State');
+            console.log(this.state);
+
+            // Notify the user
+            this.props.onAddToast(utils.errorToast(error));
+          });
+        }
+      })
+
+      // Request failed
+      .catch((error) => {
+        console.warn('Delete models: Error');
+        console.error(error);
+        this.setState({
+          loading: false
+        }, () => {
+          console.log('Delete models: State');
+          console.log(this.state);
+
+          // Notify the user
+          this.props.onAddToast(utils.errorToast(error));
+        });
+      });
+  }
+
   onSubmitDelete(model) {
     console.debug('Delete model: Start');
     client.del('/_zentity/models/' + model._id)
@@ -526,15 +683,23 @@ export class ModelsTable extends React.Component {
     this.onShowModalDelete(model);
   };
 
-  onClickActionExport(model) {
-    const json = JSON.stringify(model._source, null, 2);
-    const data = new Blob([json], { type: 'application/json' });
+  onClickActionExport(selections) {
+    const items = [];
+    for (var i in selections) {
+      const model = selections[i];
+      const action = JSON.stringify({ create: { entity_type: model._id }});
+      const payload = JSON.stringify(model._source);
+      items.push(action);
+      items.push(payload);
+    }
+    const ndjson = items.join('\n');
+    const data = new Blob([ndjson], { type: 'application/ndjson' });
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(data);
-    link.setAttribute('download', `${model._id}.json`);
+    link.setAttribute('download', `zentity-models.ndjson`);
     link.click();
     link.remove();
-  };
+  }
 
   everSearched() {
     return Array.isArray(this.state.models);
@@ -646,7 +811,7 @@ export class ModelsTable extends React.Component {
         description: 'Export model',
         icon: 'download',
         type: 'icon',
-        onClick: this.onClickActionExport
+        onClick: (model) => this.onClickActionExport([ model ])
       }
     ];
 
@@ -673,7 +838,20 @@ export class ModelsTable extends React.Component {
         incremental: true,
         placeholder: "Search..."
       },
-      filters: []
+      filters: [],
+      props: {
+        gutterSize: "none"
+      },
+      toolsRight: (() => {
+        return [
+          <EuiButton key="delete" color="danger" disabled={!this.state.selections.length} iconType="trash" onClick={this.onSubmitDeleteMany}>
+            Delete
+          </EuiButton>,
+          <EuiButton key="export" color="primary" disabled={!this.state.selections.length} iconType="download" onClick={() => this.onClickActionExport(this.state.selections) }>
+            Export
+          </EuiButton>
+        ];
+      })()
     };
 
     const pagination = {
@@ -686,6 +864,16 @@ export class ModelsTable extends React.Component {
         field: '_id',
         direction: 'asc'
       }
+    };
+
+    const selectionValue = {
+      selectable: () => true,
+      onSelectionChange: (selections) => {
+        this.setState({
+          selections: selections
+        });
+      },
+      initialSelected: [],
     };
 
     return (
@@ -705,14 +893,14 @@ export class ModelsTable extends React.Component {
               Create
             </EuiButton>
           </EuiFlexItem>
-          {/*<EuiFlexItem grow={false}>
+          {<EuiFlexItem grow={false}>
             <EuiButton
               iconType="download"
               onClick={this.getModels}
               isDisabled={this.state.loading}>
               Import
             </EuiButton>
-          </EuiFlexItem>*/}
+          </EuiFlexItem>}
           <EuiFlexItem grow={false}>
             <EuiButton
               iconType="refresh"
@@ -735,9 +923,12 @@ export class ModelsTable extends React.Component {
           }
           { this.everSearched() && this.state.models.length > 0 &&
             <EuiInMemoryTable
-              items={this.state.models}
-              itemId="_id"
+              columns={columns}
               error={this.state.error}
+              hasActions={true}
+              isSelectable={true}
+              itemId="_id"
+              items={this.state.models}
               loading={this.state.loading}
               message={(
                 <EuiEmptyPrompt
@@ -753,11 +944,10 @@ export class ModelsTable extends React.Component {
                     </EuiButton>
                   }/>
               )}
-              columns={columns}
-              search={search}
               pagination={pagination}
+              search={search}
+              selection={selectionValue}
               sorting={sorting}
-              hasActions={true}
             />
           }
           {this.everSearched() && this.state.models.length === 0 &&
