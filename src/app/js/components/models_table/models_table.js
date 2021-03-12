@@ -151,8 +151,8 @@ export class ModelsTable extends React.Component {
     this.setState({ modalCreate: true });
   };
 
-  onShowModalDelete(model) {
-    this.setState({ modalDelete: model });
+  onShowModalDelete(models) {
+    this.setState({ modalDelete: models });
   };
 
   onSubmitClone(model, clonedName) {
@@ -457,10 +457,10 @@ export class ModelsTable extends React.Component {
             if (item.delete) {
               if (!item.delete.error) {
                 deleted[_id] = true;
-                itemsSuccess.push(<div key="_id"><EuiCode>{_id}</EuiCode></div>);
+                itemsSuccess.push(<div key={_id}><EuiCode>{_id}</EuiCode></div>);
                 numSuccess++;
               } else {
-                itemsFailure.push(<div key="_id"><EuiCode>{_id}</EuiCode></div>);
+                itemsFailure.push(<div key={_id}><EuiCode>{_id}</EuiCode></div>);
                 numFailure++;
               }
             }
@@ -679,8 +679,8 @@ export class ModelsTable extends React.Component {
     this.onShowModalClone(model);
   };
 
-  onClickActionDelete(model) {
-    this.onShowModalDelete(model);
+  onClickActionDelete(models) {
+    this.onShowModalDelete(models);
   };
 
   onClickActionExport(selections) {
@@ -760,16 +760,21 @@ export class ModelsTable extends React.Component {
 
     let modalDelete;
     if (this.state.modalDelete) {
+      const items = [];
+      for (var i in this.state.modalDelete)
+        items.push(
+          <div key={this.state.modalDelete[i]._id}><EuiCode>{this.state.modalDelete[i]._id}</EuiCode></div>
+        );
       modalDelete = (
         <EuiConfirmModal
           title={<EuiTitle><h2>Delete Model</h2></EuiTitle>}
           onCancel={this.onCloseModalDelete}
-          onConfirm={() => this.onSubmitDelete(this.state.modalDelete)}
+          onConfirm={() => items.length === 1 ? this.onSubmitDelete(this.state.modalDelete[0]) : this.onSubmitDeleteMany(this.state.modalDelete)}
           cancelButtonText="Cancel"
           confirmButtonText="Delete"
           buttonColor="danger"
           defaultFocusedButton="cancel">
-          <EuiCode>{this.state.modalDelete._id}</EuiCode>
+          {items}
         </EuiConfirmModal>
       );
     }
@@ -804,7 +809,7 @@ export class ModelsTable extends React.Component {
         icon: 'trash',
         type: 'icon',
         color: 'danger',
-        onClick: this.onClickActionDelete
+        onClick: (model) => this.onClickActionDelete([ model ])
       },
       {
         name: 'Export',
@@ -844,7 +849,7 @@ export class ModelsTable extends React.Component {
       },
       toolsRight: (() => {
         return [
-          <EuiButton key="delete" color="danger" disabled={!this.state.selections.length} iconType="trash" onClick={this.onSubmitDeleteMany}>
+          <EuiButton key="delete" color="danger" disabled={!this.state.selections.length} iconType="trash" onClick={() => this.onShowModalDelete(this.state.selections)}>
             Delete
           </EuiButton>,
           <EuiButton key="export" color="primary" disabled={!this.state.selections.length} iconType="download" onClick={() => this.onClickActionExport(this.state.selections) }>
