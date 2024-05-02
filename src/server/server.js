@@ -31,14 +31,14 @@ const statics = [ "/", "/css*", "/fonts*", "/img*", "/js*" ];
 app.use(statics, express.static(path.join(__dirname, "..", "app")));
 app.use(function(req, res, next) {
   var rawBody = '';
-  req.setEncoding('utf8');
+  //req.setEncoding('utf8');
   req.on('data', function(chunk) {
     rawBody += chunk;
   });
   req.on('end', function() {
     req.rawBody = rawBody;
-    next();
   });
+  next();
 });
 app.use(bodyParser.json());
 
