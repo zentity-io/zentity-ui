@@ -13,4 +13,4 @@ concurrently(
   {
     killOthers: ['failure', 'success']
   }
-);
+)

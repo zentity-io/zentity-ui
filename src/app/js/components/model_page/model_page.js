@@ -1,10 +1,9 @@
-import React from 'react';
+import React from 'react'
 
-import { cloneDeep, get } from 'lodash';
-import { addedDiff, deletedDiff, updatedDiff } from 'deep-object-diff';
+import { cloneDeep, get } from 'lodash'
+import { addedDiff, deletedDiff, updatedDiff } from 'deep-object-diff'
 
 import {
-  EuiAccordion,
   EuiButton,
   EuiCode,
   EuiConfirmModal,
@@ -19,18 +18,18 @@ import {
   EuiTabs,
   EuiText,
   EuiTitle
-} from '@elastic/eui';
+} from '@elastic/eui'
 
 // App components
-import { ModelSection } from '../model_section';
+import { ModelSection } from '../model_section'
 
-const client = require('../../client');
-const utils = require('../../utils');
+const client = require('../../client')
+const utils = require('../../utils')
 
 export class ModelPage extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       everLoaded: false,
       loading: false,
@@ -43,10 +42,10 @@ export class ModelPage extends React.Component {
         deleted: {},
         updated: {}
       },
-      modelId: get(props, "match.params.model_id") || null,
+      modelId: get(props, 'match.params.model_id') || null,
       saving: false,
-      tab: get(props, "match.params.tab") || "attributes"
-    };
+      tab: get(props, 'match.params.tab') || 'attributes'
+    }
 
     this.tabs = [
       {
@@ -65,116 +64,116 @@ export class ModelPage extends React.Component {
         id: 'indices',
         name: 'Indices'
       }
-    ];
+    ]
 
-    this.getModel = this.getModel.bind(this);
-    this.madeLocalChanges = this.madeLocalChanges.bind(this);
-    this.modelDiff = this.modelDiff.bind(this);
-    this.onChangeModelCopy = this.onChangeModelCopy.bind(this);
-    this.onChangeTab = this.onChangeTab.bind(this);
-    this.onInvalidModelCopy = this.onInvalidModelCopy.bind(this);
-    this.onSubmitReload = this.onSubmitReload.bind(this);
-    this.onSubmitSave = this.onSubmitSave.bind(this);
+    this.getModel = this.getModel.bind(this)
+    this.madeLocalChanges = this.madeLocalChanges.bind(this)
+    this.modelDiff = this.modelDiff.bind(this)
+    this.onChangeModelCopy = this.onChangeModelCopy.bind(this)
+    this.onChangeTab = this.onChangeTab.bind(this)
+    this.onInvalidModelCopy = this.onInvalidModelCopy.bind(this)
+    this.onSubmitReload = this.onSubmitReload.bind(this)
+    this.onSubmitSave = this.onSubmitSave.bind(this)
 
     // Modal functions
-    this.onCloseModalReload = this.onCloseModalReload.bind(this);
-    this.onCloseModalSave = this.onCloseModalSave.bind(this);
-    this.onShowModalReload = this.onShowModalReload.bind(this);
-    this.onShowModalSave = this.onShowModalSave.bind(this);
+    this.onCloseModalReload = this.onCloseModalReload.bind(this)
+    this.onCloseModalSave = this.onCloseModalSave.bind(this)
+    this.onShowModalReload = this.onShowModalReload.bind(this)
+    this.onShowModalSave = this.onShowModalSave.bind(this)
   }
 
   componentDidMount() {
-    console.debug('componentDidMount()');
-    this.getModel();
+    console.debug('componentDidMount()')
+    this.getModel()
   }
 
   componentDidUpdate(prevProps) {
-    const newState = {};
+    const newState = {}
 
     // Update state based on any changes to the URL
-    if (get(this.props, "match.params.model_id") !== get(prevProps, "match.params.model_id"))
-      newState.modelId = get(this.props, "match.params.model_id") || null;
-    if (get(this.props, "match.params.tab") !== get(prevProps, "match.params.tab"))
-      newState.tab = get(this.props, "match.params.tab") || "attributes";
+    if (get(this.props, 'match.params.model_id') !== get(prevProps, 'match.params.model_id'))
+      newState.modelId = get(this.props, 'match.params.model_id') || null
+    if (get(this.props, 'match.params.tab') !== get(prevProps, 'match.params.tab'))
+      newState.tab = get(this.props, 'match.params.tab') || 'attributes'
     if (Object.keys(newState).length > 0)
       this.setState(newState, () => {
-        console.debug(this.state);
+        console.debug(this.state)
       })
   }
 
   onShowModalReload() {
-    console.debug('onShowModalReload()');
+    console.debug('onShowModalReload()')
     this.setState({ modalReload: true }, () => {
-      console.debug(cloneDeep(this.state));
-    });
-  };
+      console.debug(cloneDeep(this.state))
+    })
+  }
 
   onCloseModalReload() {
-    console.debug('onCloseModalReload()');
+    console.debug('onCloseModalReload()')
     this.setState({ modalReload: null }, () => {
-      console.debug(cloneDeep(this.state));
-    });
-  };
+      console.debug(cloneDeep(this.state))
+    })
+  }
 
   onShowModalSave() {
-    console.debug('onShowModalSave()');
+    console.debug('onShowModalSave()')
     this.setState({ modalSave: true }, () => {
-      console.debug(cloneDeep(this.state));
-    });
-  };
+      console.debug(cloneDeep(this.state))
+    })
+  }
 
   onCloseModalSave() {
-    console.debug('onCloseModalSave()');
+    console.debug('onCloseModalSave()')
     this.setState({ modalSave: null }, () => {
-      console.debug(cloneDeep(this.state));
-    });
-  };
+      console.debug(cloneDeep(this.state))
+    })
+  }
 
   modelDiff(model, modelCopy) {
-    console.debug('modelDiff()');
+    console.debug('modelDiff()')
     const modelDiff = {
       added: addedDiff(model, modelCopy),
       deleted: deletedDiff(model, modelCopy),
       updated: updatedDiff(model, modelCopy)
-    };
-    return modelDiff;
+    }
+    return modelDiff
   }
 
   onChangeModelCopy(newModelCopy, onSuccess) {
-    console.debug('onChangeModelCopy()');
-    console.debug(cloneDeep(newModelCopy));
+    console.debug('onChangeModelCopy()')
+    console.debug(cloneDeep(newModelCopy))
     this.setState({
       modelCopy: newModelCopy,
       modelDiff: this.modelDiff(this.state.model, newModelCopy)
     }, () => {
       if (onSuccess)
-        onSuccess();
-    });
-  };
+        onSuccess()
+    })
+  }
 
   onInvalidModelCopy() {
-    console.debug('onInvalidModelCopy()');
+    console.debug('onInvalidModelCopy()')
     this.setState({
       modelCopy: this.state.model
     }, () => {
-      console.debug(cloneDeep(this.state));
+      console.debug(cloneDeep(this.state))
     })
   }
 
   onChangeTab(tabId) {
-    console.debug('onChangeTab()');
-    window.location.hash = '/models/' + this.state.modelId + '/' + tabId;
-  };
+    console.debug('onChangeTab()')
+    window.location.hash = '/models/' + this.state.modelId + '/' + tabId
+  }
 
   onSubmitReload() {
-    console.debug('onSubmitReload()');
-    this.madeLocalChanges() ? this.onShowModalReload() : this.getModel();
-  };
+    console.debug('onSubmitReload()')
+    this.madeLocalChanges() ? this.onShowModalReload() : this.getModel()
+  }
 
   onSubmitSave() {
-    console.debug('onSubmitSave()');
-    this.saveModel();
-  };
+    console.debug('onSubmitSave()')
+    this.saveModel()
+  }
 
   renderTabs() {
     return this.tabs.map((tab, idx) => (
@@ -184,19 +183,19 @@ export class ModelPage extends React.Component {
         key={idx}>
         {tab.name}
       </EuiTab>
-    ));
-  };
+    ))
+  }
 
   getModel() {
-    console.debug('Get model: Started');
+    console.debug('Get model: Started')
 
     // Set loading state
     this.setState({
       loading: true
     }, () => {
-      console.debug('Get model: State');
-      console.debug(cloneDeep(this.state));
-    });
+      console.debug('Get model: State')
+      console.debug(cloneDeep(this.state))
+    })
 
     // Get model
     client.get('/_zentity/models/' + this.state.modelId)
@@ -205,12 +204,12 @@ export class ModelPage extends React.Component {
         // Request successful
         try {
           if (response.data.found === true) {
-            console.debug('Get model: Success');
-            console.debug(response);
+            console.debug('Get model: Success')
+            console.debug(response)
 
             // Set model
-            const model = cloneDeep(response.data._source);
-            const modelCopy = cloneDeep(model);
+            const model = cloneDeep(response.data._source)
+            const modelCopy = cloneDeep(model)
             this.setState({
               everLoaded: true,
               loading: false,
@@ -223,21 +222,21 @@ export class ModelPage extends React.Component {
                 updated: {}
               }
             }, () => {
-              console.debug('Get model: State');
-              console.debug(cloneDeep(this.state));
-            });
+              console.debug('Get model: State')
+              console.debug(cloneDeep(this.state))
+            })
 
           // Request failure
           } else {
-            console.warn('Get model: Error');
-            console.error(response);
+            console.warn('Get model: Error')
+            console.error(response)
             this.setState({
               everLoaded: true,
               loading: false,
               modalReload: null
             }, () => {
-              console.log('Get model: State');
-              console.log(cloneDeep(this.state));
+              console.log('Get model: State')
+              console.log(cloneDeep(this.state))
               this.props.onAddToast({
                 title: 'Error',
                 text: (
@@ -245,52 +244,52 @@ export class ModelPage extends React.Component {
                     Entity model <EuiCode>{this.state.modelId}</EuiCode> not found.
                   </p>
                 )
-              });
-            });
+              })
+            })
           }
 
         // Response handling failed
         } catch (error) {
-          console.warn('Get model: Failure');
-          console.error(error);
+          console.warn('Get model: Failure')
+          console.error(error)
           this.setState({
             everLoaded: true,
             loading: false,
             modalReload: null
           }, () => {
-            console.log('Get model: State');
-            console.log(cloneDeep(this.state));
-            this.props.onAddToast(utils.errorToast(error));
-          });
+            console.log('Get model: State')
+            console.log(cloneDeep(this.state))
+            this.props.onAddToast(utils.errorToast(error))
+          })
         }
       })
 
       // Request failed
       .catch((error) => {
-        console.warn('Get model: Error');
-        console.error(error);
+        console.warn('Get model: Error')
+        console.error(error)
         this.setState({
           everLoaded: true,
           loading: false,
           modalReload: null
         }, () => {
-          console.log('Get model: State');
-          console.log(cloneDeep(this.state));
-          this.props.onAddToast(utils.errorToast(error));
-        });
-      });
+          console.log('Get model: State')
+          console.log(cloneDeep(this.state))
+          this.props.onAddToast(utils.errorToast(error))
+        })
+      })
   }
 
   saveModel() {
-    console.debug('Save model: Started');
+    console.debug('Save model: Started')
 
     // Set loading state
     this.setState({
       saving: true
     }, () => {
-      console.debug('Save model: State');
-      console.debug(cloneDeep(this.state));
-    });
+      console.debug('Save model: State')
+      console.debug(cloneDeep(this.state))
+    })
 
     // Save models
     client.put('/_zentity/models/' + this.state.modelId, { data: this.state.modelCopy })
@@ -298,13 +297,13 @@ export class ModelPage extends React.Component {
 
         // Request successful
         try {
-          if (response.data.result === "updated") {
-            console.debug('Save model: Success');
-            console.debug(response);
+          if (response.data.result === 'updated') {
+            console.debug('Save model: Success')
+            console.debug(response)
 
             // Set model
-            const model = this.state.modelCopy;
-            const modelCopy = cloneDeep(model);
+            const model = this.state.modelCopy
+            const modelCopy = cloneDeep(model)
             this.setState({
               modalSave: null,
               model: model,
@@ -316,26 +315,26 @@ export class ModelPage extends React.Component {
               },
               saving: false
             }, () => {
-              console.debug('Save model: State');
-              console.debug(cloneDeep(this.state));
-            });
+              console.debug('Save model: State')
+              console.debug(cloneDeep(this.state))
+            })
             this.props.onAddToast({
               title: 'Saved model',
               color: 'success',
               iconType: 'check',
               text: (<EuiCode>{this.state.modelId}</EuiCode>)
-            });
+            })
 
           // Request failure
           } else {
-            console.warn('Save model: Error');
-            console.error(response);
+            console.warn('Save model: Error')
+            console.error(response)
             this.setState({
               modalSave: null,
               saving: false
             }, () => {
-              console.log('Save model: State');
-              console.log(cloneDeep(this.state));
+              console.log('Save model: State')
+              console.log(cloneDeep(this.state))
               this.props.onAddToast({
                 title: 'Error',
                 text: (
@@ -343,105 +342,105 @@ export class ModelPage extends React.Component {
                     {JSON.stringify(response.data)}
                   </p>
                 )
-              });
-            });
+              })
+            })
           }
 
         // Response handling failed
         } catch (error) {
-          console.warn('Save model: Failure');
-          console.error(error);
+          console.warn('Save model: Failure')
+          console.error(error)
           this.setState({
             modalSave: null,
             saving: false
           }, () => {
-            console.log('Save model: State');
-            console.log(cloneDeep(this.state));
-            this.props.onAddToast(utils.errorToast(error));
-          });
+            console.log('Save model: State')
+            console.log(cloneDeep(this.state))
+            this.props.onAddToast(utils.errorToast(error))
+          })
         }
       })
 
       // Request failed
       .catch((error) => {
-        console.warn('Save model: Error');
-        console.error(error);
+        console.warn('Save model: Error')
+        console.error(error)
         this.setState({
           modalSave: null,
           saving: false
         }, () => {
-          console.log('Save model: State');
-          console.log(cloneDeep(this.state));
-          this.props.onAddToast(utils.errorToast(error));
-        });
-      });
+          console.log('Save model: State')
+          console.log(cloneDeep(this.state))
+          this.props.onAddToast(utils.errorToast(error))
+        })
+      })
   }
 
   madeLocalChanges() {
-    const d = this.state.modelDiff;
-    return Object.keys(d.added).length + Object.keys(d.deleted).length + Object.keys(d.updated).length;
+    const d = this.state.modelDiff
+    return Object.keys(d.added).length + Object.keys(d.deleted).length + Object.keys(d.updated).length
   }
 
   render() {
 
-    let modalReload;
+    let modalReload
     if (this.state.modalReload) {
       modalReload = (
         <EuiConfirmModal
           title={<EuiTitle><h2>Reload Model</h2></EuiTitle>}
           onCancel={this.onCloseModalReload}
           onConfirm={this.getModel}
-          cancelButtonText="Cancel"
-          confirmButtonText="Reload"
+          cancelButtonText='Cancel'
+          confirmButtonText='Reload'
           confirmButtonDisabled={this.state.loading}
-          buttonColor="danger"
-          defaultFocusedButton="cancel"
+          buttonColor='danger'
+          defaultFocusedButton='cancel'
           isLoading={this.state.loading}>
           <EuiText>
             You have unsaved changes. Do you want to discard these changes and reload the entity model?
           </EuiText>
         </EuiConfirmModal>
-      );
+      )
     }
 
-    let modalSave;
+    let modalSave
     if (this.state.modalSave) {
       modalReload = (
         <EuiConfirmModal
           title={<EuiTitle><h2>Save Model</h2></EuiTitle>}
           onCancel={this.onCloseModalSave}
           onConfirm={this.onSubmitSave}
-          cancelButtonText="Cancel"
-          confirmButtonText="Save"
+          cancelButtonText='Cancel'
+          confirmButtonText='Save'
           confirmButtonDisabled={this.state.saving}
-          buttonColor="primary"
-          defaultFocusedButton="cancel"
+          buttonColor='primary'
+          defaultFocusedButton='cancel'
           isLoading={this.state.saving}>
           <EuiText>
             Save changes and overwrite existing entity model?
           </EuiText>
         </EuiConfirmModal>
-      );
+      )
     }
 
     return (
-      <EuiPage className="zentity-model">
+      <EuiPage className='zentity-model'>
         <EuiPageBody>
 
           {/* Header */}
-          <EuiTitle size="l">
+          <EuiTitle size='l'>
             <h1>{this.state.modelId}</h1>
           </EuiTitle>
 
-          <EuiSpacer size="m"/>
+          <EuiSpacer size='m'/>
 
           {/* Buttons */}
-          <EuiFlexGroup responsive={false} gutterSize="s">
+          <EuiFlexGroup responsive={false} gutterSize='s'>
             <EuiFlexItem grow={false}>
               <EuiButton
-                type="submit"
-                iconType={this.madeLocalChanges() ? "check" : "minusInCircle"}
-                color="primary"
+                type='submit'
+                iconType={this.madeLocalChanges() ? 'check' : 'minusInCircle'}
+                color='primary'
                 fill={(!this.state.loading && this.madeLocalChanges()) ? true : false}
                 isDisabled={this.state.loading || this.state.saving || !this.madeLocalChanges()}
                 isLoading={this.state.saving}
@@ -452,9 +451,9 @@ export class ModelPage extends React.Component {
             </EuiFlexItem>
             <EuiFlexItem grow={false}>
               <EuiButton
-                type="submit"
-                iconType="refresh"
-                color="primary"
+                type='submit'
+                iconType='refresh'
+                color='primary'
                 isDisabled={this.state.loading || this.state.saving}
                 isLoading={this.state.loading}
                 onClick={this.onSubmitReload}
@@ -464,7 +463,7 @@ export class ModelPage extends React.Component {
             </EuiFlexItem>
           </EuiFlexGroup>
 
-          <EuiSpacer size="m"/>
+          <EuiSpacer size='m'/>
 
           {/* Tabs */}
           <EuiTabs>
@@ -504,6 +503,6 @@ export class ModelPage extends React.Component {
         {modalSave}
 
       </EuiPage>
-    );
+    )
   }
-};
+}

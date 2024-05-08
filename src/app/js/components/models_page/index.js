@@ -1,1 +1,1 @@
-export { ModelsPage } from './models_page';
+export { ModelsPage } from './models_page'

@@ -1,1 +1,1 @@
-export { ExploreSearch } from './explore_search';
+export { ExploreSearch } from './explore_search'

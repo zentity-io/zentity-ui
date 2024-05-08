@@ -1,5 +1,5 @@
-import React from 'react';
-var _ = require('lodash');
+import React from 'react'
+var _ = require('lodash')
 import {
   EuiButtonIcon,
   EuiFlexGroup,
@@ -7,24 +7,24 @@ import {
   EuiInMemoryTable,
   EuiPanel,
   EuiText,
-} from '@elastic/eui';
+} from '@elastic/eui'
 
-import { CodeEditor } from '../code_editor';
-import { ExploreSearchNoResults } from '../explore_search_no_results';
+import { CodeEditor } from '../code_editor'
+import { ExploreSearchNoResults } from '../explore_search_no_results'
 
 export class ExploreDocumentsTable extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       documents: this.resetDocuments(this.props.documents),
       documentsExpanded: {}
-    };
+    }
 
-    this.onToggleRowDetails = this.onToggleRowDetails.bind(this);
+    this.onToggleRowDetails = this.onToggleRowDetails.bind(this)
 
-  };
+  }
 
   // When the parent updates the documents, update this state.
   componentDidUpdate(oldProps) {
@@ -32,25 +32,25 @@ export class ExploreDocumentsTable extends React.Component {
       this.setState({
         documents: this.resetDocuments(this.props.documents),
         documentsExpanded: {}
-      });
+      })
     }
-  };
+  }
 
   // Assign an identifier for each document.
   resetDocuments(documents) {
-    const _documents = [];
+    const _documents = []
     for (var i in documents) {
-      const document = documents[i];
-      document.__doc_row_id__ = i;
-      _documents.push(document);
+      const document = documents[i]
+      document.__doc_row_id__ = i
+      _documents.push(document)
     }
-    return _documents;
-  };
+    return _documents
+  }
 
   onToggleRowDetails(item) {
-    const documentsExpanded = { ...this.state.documentsExpanded };
+    const documentsExpanded = { ...this.state.documentsExpanded }
     if (documentsExpanded[item.__doc_row_id__]) {
-      delete documentsExpanded[item.__doc_row_id__];
+      delete documentsExpanded[item.__doc_row_id__]
     } else {
       const items = [
         {
@@ -91,7 +91,7 @@ export class ExploreDocumentsTable extends React.Component {
             }
           ]
         }
-      ];
+      ]
       documentsExpanded[item.__doc_row_id__] = (
         <EuiFlexGroup>
           <EuiFlexItem grow>
@@ -103,16 +103,16 @@ export class ExploreDocumentsTable extends React.Component {
             </EuiText>
           </EuiFlexItem>
         </EuiFlexGroup>
-      );
+      )
     }
     this.setState({
       documentsExpanded: documentsExpanded
     }, () => {
-      console.log('toggle row details:');
-      console.log(item);
-      console.log(this.state);
-    });
-  };
+      console.log('toggle row details:')
+      console.log(item)
+      console.log(this.state)
+    })
+  }
 
   render() {
 
@@ -128,21 +128,21 @@ export class ExploreDocumentsTable extends React.Component {
           />
         )
       }
-    ];
-    const attributes = {};
+    ]
+    const attributes = {}
     for (var i in this.state.documents) {
       for (var name in this.state.documents[i]._attributes) {
-        attributes[name] = true;
+        attributes[name] = true
       }
     }
-    const attributesNames = Object.keys(attributes).sort();
+    const attributesNames = Object.keys(attributes).sort()
     for (var i in attributesNames) {
       columns.push({
         field: '_attributes.' + attributesNames[i],
         name: attributesNames[i],
         sortable: true,
         truncateText: false
-      });
+      })
     }
     const standardColumns = [
       {
@@ -175,23 +175,23 @@ export class ExploreDocumentsTable extends React.Component {
         sortable: true,
         truncateText: false
       }
-    ];
+    ]
     for (var i in standardColumns) {
-      columns.push(standardColumns[i]);
+      columns.push(standardColumns[i])
     }
 
     const search = {
       box: {
         incremental: true,
-        placeholder: "Filter..."
+        placeholder: 'Filter...'
       },
       filters: []
-    };
+    }
 
     const pagination = {
       initialPageSize: 10,
       pageSizeOptions: [10, 25, 50]
-    };
+    }
 
     /*
     _index
@@ -208,7 +208,7 @@ export class ExploreDocumentsTable extends React.Component {
         {this.state.documents.length > 0 &&
           <EuiInMemoryTable
             items={this.state.documents}
-            itemId="__doc_row_id__"
+            itemId='__doc_row_id__'
             itemIdToExpandedRowMap={this.state.documentsExpanded}
             columns={columns}
             search={search}
@@ -223,6 +223,6 @@ export class ExploreDocumentsTable extends React.Component {
           <ExploreSearchNoResults/>
         }
       </EuiPanel>
-    );
-  };
-};
+    )
+  }
+}

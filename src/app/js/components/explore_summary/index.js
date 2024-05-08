@@ -1,1 +1,1 @@
-export { ExploreSummary } from './explore_summary';
+export { ExploreSummary } from './explore_summary'

@@ -1,1 +1,1 @@
-export { ModelTable } from './model_table';
+export { ModelTable } from './model_table'

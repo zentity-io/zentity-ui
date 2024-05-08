@@ -1,1 +1,1 @@
-export { ModelValidations } from './model_validations';
+export { ModelValidations } from './model_validations'

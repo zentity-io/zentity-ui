@@ -1,1 +1,1 @@
-export { PageHeader } from './page_header';
+export { PageHeader } from './page_header'

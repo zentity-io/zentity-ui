@@ -1,5 +1,3 @@
-const environment = require('.');
+const environment = require('.')
 
-module.exports = async () => {
-  await environment.teardown();
-};
+module.exports = async () => await environment.teardown()

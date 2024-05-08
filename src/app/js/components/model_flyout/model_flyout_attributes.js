@@ -1,6 +1,6 @@
-import React from 'react';
+import React from 'react'
 
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash'
 
 import {
   EuiFlexGroup,
@@ -12,18 +12,18 @@ import {
   EuiSwitch,
   EuiText,
   EuiTitle
-} from '@elastic/eui';
+} from '@elastic/eui'
 
-import { ModelFlyoutAbstract } from './model_flyout_abstract.js';
+import { ModelFlyoutAbstract } from './model_flyout_abstract.js'
 
 export class ModelFlyoutAttributes extends ModelFlyoutAbstract {
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       ...this.state
     }
-    this.section = "attributes";
+    this.section = 'attributes'
   }
 
   renderBody() {
@@ -33,10 +33,10 @@ export class ModelFlyoutAttributes extends ModelFlyoutAbstract {
       <EuiTitle>
         <EuiText>Type</EuiText>
       </EuiTitle>
-      <EuiSpacer size="xs" />
-      <EuiFormRow fullWidth helpText="The type of the attribute.">
+      <EuiSpacer size='xs' />
+      <EuiFormRow fullWidth helpText='The type of the attribute.'>
         <EuiSelect
-          id="attribute-type"
+          id='attribute-type'
           fullWidth
           options={[
             { value: 'string', text: 'string' },
@@ -46,9 +46,9 @@ export class ModelFlyoutAttributes extends ModelFlyoutAbstract {
           ]}
           value={this.state.data.type}
           onChange={(e) => {
-            const data = this.state.data;
-            data.type = e.currentTarget.value;
-            this.setState({ data: data });
+            const data = this.state.data
+            data.type = e.currentTarget.value
+            this.setState({ data: data })
           }}
         />
       </EuiFormRow>
@@ -56,7 +56,7 @@ export class ModelFlyoutAttributes extends ModelFlyoutAbstract {
       <EuiSpacer />
 
       {/* Attribute score */}
-      <EuiFlexGroup gutterSize="s" responsive={false}>
+      <EuiFlexGroup gutterSize='s' responsive={false}>
         <EuiFlexItem grow={true}>
           <EuiTitle>
             <EuiText>Score</EuiText>
@@ -66,30 +66,30 @@ export class ModelFlyoutAttributes extends ModelFlyoutAbstract {
           <EuiSwitch
             checked={this.state.data.score != null}
             onChange={(e) => {
-              const data = cloneDeep(this.state.data);
+              const data = cloneDeep(this.state.data)
               // Toggle score
               if (data.score != null)
-                data.score = null;
+                data.score = null
               else
-                data.score = 0.5;
+                data.score = 0.5
               this.setState({
                 data: data
-              });
+              })
             }}
           />
         </EuiFlexItem>
       </EuiFlexGroup>
-      <EuiSpacer size="xs" />
-      <EuiFormRow fullWidth helpText="The identity confidence base score of the attribute.">
+      <EuiSpacer size='xs' />
+      <EuiFormRow fullWidth helpText='The identity confidence base score of the attribute.'>
         <>
         { this.state.data.score == null &&
-          <EuiText color="subdued" size="xs">
+          <EuiText color='subdued' size='xs'>
             (Not defined. Click the toggle switch to enable.)
           </EuiText>
         }
         { this.state.data.score != null &&
         <EuiRange
-          id="attribute-score"
+          id='attribute-score'
           fullWidth
           showTicks={true}
           min={0.0}
@@ -120,15 +120,15 @@ export class ModelFlyoutAttributes extends ModelFlyoutAbstract {
           showRange={true}
           value={this.state.data.score}
           onChange={(e) => {
-            const data = cloneDeep(this.state.data);
-            data.score = parseFloat(e.currentTarget.value);
-            this.setState({ data: data });
+            const data = cloneDeep(this.state.data)
+            data.score = parseFloat(e.currentTarget.value)
+            this.setState({ data: data })
           }}
         />
         }
         </>
       </EuiFormRow>
 
-    </>);
+    </>)
   }
-};
+}

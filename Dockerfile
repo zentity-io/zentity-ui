@@ -1,4 +1,4 @@
-FROM node:10.23.1
+FROM node:20.12.1
 ENV NODE_ENV production
 
 WORKDIR /

@@ -1,9 +1,8 @@
-import React from 'react';
+import React from 'react'
 
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash'
 
 import {
-  EuiCodeEditor,
   EuiFlexGroup,
   EuiFlexItem,
   EuiFormRow,
@@ -12,43 +11,43 @@ import {
   EuiSwitch,
   EuiText,
   EuiTitle
-} from '@elastic/eui';
+} from '@elastic/eui'
 
-import { CodeEditor } from '../code_editor';
-import { ModelFlyoutAbstract } from './model_flyout_abstract.js';
+import { CodeEditor } from '../code_editor'
+import { ModelFlyoutAbstract } from './model_flyout_abstract.js'
 
 export class ModelFlyoutMatchers extends ModelFlyoutAbstract {
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       ...this.state,
       clauseString: '{}',
       clauseInvalid: false
     }
     try {
-      this.state.clauseString = JSON.stringify(this.state.data.clause, null, 2);
+      this.state.clauseString = JSON.stringify(this.state.data.clause, null, 2)
     } catch (e) {
       clauseString: '{}',
-      this.state.clauseInvalid = true;
+      this.state.clauseInvalid = true
     }
 
-    this.section = "matchers";
+    this.section = 'matchers'
   }
 
   beforeApply(callback) {
-    const data = cloneDeep(this.state.data);
-    data.clause = JSON.parse(this.state.clauseString);
-    this.setState({ data: data }, callback);
+    const data = cloneDeep(this.state.data)
+    data.clause = JSON.parse(this.state.clauseString)
+    this.setState({ data: data }, callback)
   }
 
   isInvalid() {
     try {
-      JSON.parse(this.state.clauseString);
+      JSON.parse(this.state.clauseString)
     } catch (e) {
-      return true;
+      return true
     }
-    return false;
+    return false
   }
 
   renderBody() {
@@ -58,23 +57,23 @@ export class ModelFlyoutMatchers extends ModelFlyoutAbstract {
       <EuiTitle>
         <EuiText>Clause</EuiText>
       </EuiTitle>
-      <EuiSpacer size="xs" />
-      <EuiFormRow fullWidth helpText="An Elasticsearch query clause.">
+      <EuiSpacer size='xs' />
+      <EuiFormRow fullWidth helpText='An Elasticsearch query clause.'>
         <CodeEditor
-          height="200px"
+          height='200px'
           isReadOnly={(this.props.loading || this.props.saving)}
           value={this.state.clauseString}
           onChange={(value) => {
-            let clauseInvalid = false;
+            let clauseInvalid = false
             try {
-              JSON.parse(value);
+              JSON.parse(value)
             } catch (e) {
               clauseInvalid: true
             }
             this.setState({
               clauseString: value,
               clauseInvalid: clauseInvalid
-            });
+            })
           }}
         />
       </EuiFormRow>
@@ -82,7 +81,7 @@ export class ModelFlyoutMatchers extends ModelFlyoutAbstract {
       <EuiSpacer />
 
       {/* Quality */}
-      <EuiFlexGroup gutterSize="s" responsive={false}>
+      <EuiFlexGroup gutterSize='s' responsive={false}>
         <EuiFlexItem grow={true}>
           <EuiTitle>
             <EuiText>Quality</EuiText>
@@ -92,30 +91,30 @@ export class ModelFlyoutMatchers extends ModelFlyoutAbstract {
           <EuiSwitch
             checked={this.state.data.quality != null}
             onChange={(e) => {
-              const data = cloneDeep(this.state.data);
+              const data = cloneDeep(this.state.data)
               // Toggle quality
               if (data.quality != null)
-                data.quality = null;
+                data.quality = null
               else
-                data.quality = 1.0;
+                data.quality = 1.0
               this.setState({
                 data: data
-              });
+              })
             }}
           />
         </EuiFlexItem>
       </EuiFlexGroup>
-      <EuiSpacer size="xs" />
-      <EuiFormRow fullWidth helpText="The quality of the matcher.">
+      <EuiSpacer size='xs' />
+      <EuiFormRow fullWidth helpText='The quality of the matcher.'>
         <>
         { this.state.data.quality == null &&
-          <EuiText color="subdued" size="xs">
+          <EuiText color='subdued' size='xs'>
             (Not defined. Click the toggle switch to enable.)
           </EuiText>
         }
         { this.state.data.quality != null &&
         <EuiRange
-          id="matcher-quality"
+          id='matcher-quality'
           fullWidth
           min={0.0}
           max={1.0}
@@ -138,15 +137,15 @@ export class ModelFlyoutMatchers extends ModelFlyoutAbstract {
           showTicks={true}
           value={this.state.data.quality}
           onChange={(e) => {
-            const data = cloneDeep(this.state.data);
-            data.quality = parseFloat(e.currentTarget.value);
-            this.setState({ data: data });
+            const data = cloneDeep(this.state.data)
+            data.quality = parseFloat(e.currentTarget.value)
+            this.setState({ data: data })
           }}
         />
         }
         </>
       </EuiFormRow>
 
-    </>);
+    </>)
   }
-};
+}

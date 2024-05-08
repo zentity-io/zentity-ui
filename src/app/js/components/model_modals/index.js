@@ -1,1 +1,1 @@
-export { ModelModals } from './model_modals';
+export { ModelModals } from './model_modals'

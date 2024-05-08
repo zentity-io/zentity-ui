@@ -1,1 +1,1 @@
-export { ExploreExplanation } from './explore_explanation';
+export { ExploreExplanation } from './explore_explanation'

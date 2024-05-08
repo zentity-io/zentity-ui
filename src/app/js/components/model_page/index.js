@@ -1,1 +1,1 @@
-export { ModelPage } from './model_page';
+export { ModelPage } from './model_page'
