@@ -12,7 +12,7 @@ import {
   EuiTabs,
   EuiText,
   EuiTextColor,
-  EuiTitle
+  EuiTitle,
 } from '@elastic/eui'
 
 import { CodeEditor } from '../code_editor'
@@ -25,7 +25,6 @@ const client = require('../../client')
 const utils = require('../../utils')
 
 export class ExplorePage extends React.Component {
-
   constructor(props) {
     super(props)
     this.state = {
@@ -34,39 +33,39 @@ export class ExplorePage extends React.Component {
       resolution: {
         lastAttempt: {
           request: {},
-          response: {}
+          response: {},
         },
         lastSuccess: {
           request: {},
           requestString: '',
           response: {},
-          responseString: ''
-        }
+          responseString: '',
+        },
       },
-      tab: 'summary'
+      tab: 'summary',
     }
 
     this.tabs = [
       {
         id: 'summary',
-        name: 'Summary'
+        name: 'Summary',
       },
       {
         id: 'documents',
-        name: 'Documents'
+        name: 'Documents',
       },
       {
         id: 'explanation',
-        name: 'Explanation'
+        name: 'Explanation',
       },
       {
         id: 'request',
-        name: 'Request'
+        name: 'Request',
       },
       {
         id: 'response',
-        name: 'Response'
-      }
+        name: 'Response',
+      },
     ]
 
     this.onChangeTab = this.onChangeTab.bind(this)
@@ -82,17 +81,20 @@ export class ExplorePage extends React.Component {
     console.debug('Get models: Started')
 
     // Set loading state
-    this.setState({
-      loading: true
-    }, () => {
-      console.debug('Get models: State')
-      console.debug(this.state)
-    })
+    this.setState(
+      {
+        loading: true,
+      },
+      () => {
+        console.debug('Get models: State')
+        console.debug(this.state)
+      }
+    )
 
     // Get models
-    client.get('/_zentity/models')
+    client
+      .get('/_zentity/models')
       .then((response) => {
-
         // Request successful
         try {
           console.debug('Get models: Success')
@@ -104,25 +106,31 @@ export class ExplorePage extends React.Component {
             const entityType = response.data.hits.hits[h]._id
             models[entityType] = response.data.hits.hits[h]._source
           }
-          this.setState({
-            loading: false,
-            models: models
-          }, () => {
-            console.debug('Get models: State')
-            console.debug(this.state)
-          })
+          this.setState(
+            {
+              loading: false,
+              models: models,
+            },
+            () => {
+              console.debug('Get models: State')
+              console.debug(this.state)
+            }
+          )
 
-        // Response handling failed
+          // Response handling failed
         } catch (error) {
           console.warn('Get models: Failure')
           console.error(error)
-          this.setState({
-            loading: false
-          }, () => {
-            console.log('Get models: State')
-            console.log(this.state)
-            this.props.onAddToast(utils.errorToast(error))
-          })
+          this.setState(
+            {
+              loading: false,
+            },
+            () => {
+              console.log('Get models: State')
+              console.log(this.state)
+              this.props.onAddToast(utils.errorToast(error))
+            }
+          )
         }
       })
 
@@ -130,13 +138,16 @@ export class ExplorePage extends React.Component {
       .catch((error) => {
         console.warn('Get models: Error')
         console.error(error)
-        this.setState({
-          loading: false
-        }, () => {
-          console.log('Get models: State')
-          console.log(this.state)
-          this.props.onAddToast(utils.errorToast(error))
-        })
+        this.setState(
+          {
+            loading: false,
+          },
+          () => {
+            console.log('Get models: State')
+            console.log(this.state)
+            this.props.onAddToast(utils.errorToast(error))
+          }
+        )
       })
   }
 
@@ -146,19 +157,22 @@ export class ExplorePage extends React.Component {
     const resolution = this.state.resolution
     resolution.lastAttempt = {
       request: request,
-      response: {}
+      response: {},
     }
-    this.setState({
-      loading: true,
-      resolution: resolution
-    }, () => {
-      console.debug('Submit resolution: State')
-      console.debug(this.state)
-    })
+    this.setState(
+      {
+        loading: true,
+        resolution: resolution,
+      },
+      () => {
+        console.debug('Submit resolution: State')
+        console.debug(this.state)
+      }
+    )
     const path = '/_zentity/resolution/' + request.entity_type
-    client.post(path, request)
+    client
+      .post(path, request)
       .then((response) => {
-
         // Request successful
         const resolution = this.state.resolution
         try {
@@ -167,35 +181,41 @@ export class ExplorePage extends React.Component {
           resolution.lastSuccess.request = request
           resolution.lastSuccess.requestString = JSON.stringify(request.data, null, 2)
           resolution.lastSuccess.response = {
-            body: response.data
+            body: response.data,
           }
           resolution.lastSuccess.responseString = JSON.stringify(response.data, null, 2)
           resolution.lastAttempt.response = {
-            body: response.data
+            body: response.data,
           }
-          this.setState({
-            loading: false,
-            resolution: resolution
-          }, () => {
-            console.debug('Submit resolution: State')
-            console.debug(this.state)
-          })
+          this.setState(
+            {
+              loading: false,
+              resolution: resolution,
+            },
+            () => {
+              console.debug('Submit resolution: State')
+              console.debug(this.state)
+            }
+          )
 
-        // Response handling failed
+          // Response handling failed
         } catch (error) {
           console.warn('Submit resolution: Failure')
           console.error(error)
           resolution.lastAttempt.response = {
-            body: error.response.data
+            body: error.response.data,
           }
-          this.setState({
-            loading: false,
-            resolution: resolution
-          }, () => {
-            console.log('Submit resolution: State')
-            console.log(this.state)
-            this.props.onAddToast(utils.errorToast(error))
-          })
+          this.setState(
+            {
+              loading: false,
+              resolution: resolution,
+            },
+            () => {
+              console.log('Submit resolution: State')
+              console.log(this.state)
+              this.props.onAddToast(utils.errorToast(error))
+            }
+          )
         }
       })
 
@@ -203,13 +223,16 @@ export class ExplorePage extends React.Component {
       .catch((error) => {
         console.warn('Submit resolution: Failure')
         console.error(error)
-        this.setState({
-          loading: false
-        }, () => {
-          console.log('Submit resolution: State')
-          console.log(this.state)
-          this.props.onAddToast(utils.errorToast(error))
-        })
+        this.setState(
+          {
+            loading: false,
+          },
+          () => {
+            console.log('Submit resolution: State')
+            console.log(this.state)
+            this.props.onAddToast(utils.errorToast(error))
+          }
+        )
       })
   }
 
@@ -229,10 +252,7 @@ export class ExplorePage extends React.Component {
 
   renderTabs() {
     return this.tabs.map((tab, idx) => (
-      <EuiTab
-        onClick={() => this.onChangeTab(tab.id)}
-        isSelected={tab.id === this.state.tab}
-        key={idx}>
+      <EuiTab onClick={() => this.onChangeTab(tab.id)} isSelected={tab.id === this.state.tab} key={idx}>
         {tab.name}
       </EuiTab>
     ))
@@ -244,14 +264,13 @@ export class ExplorePage extends React.Component {
 
   render() {
     return (
-      <EuiPage className='zentity-explore'>
+      <EuiPage className="zentity-explore">
         <EuiPageBody>
-
-          <EuiTitle size='l'>
+          <EuiTitle size="l">
             <h1>Explore</h1>
           </EuiTitle>
 
-          <EuiSpacer size='m'/>
+          <EuiSpacer size="m" />
 
           <ExploreSearch
             loading={this.state.loading}
@@ -259,191 +278,210 @@ export class ExplorePage extends React.Component {
             onAddToast={this.props.onAddToast}
             onGetResolution={this.onGetResolution}
             onSubmitResolution={this.onSubmitResolution}
-            />
+          />
 
-          <EuiSpacer/>
+          <EuiSpacer />
 
           <EuiFlexGroup>
-
-            <EuiFlexItem className='zentity-explore' grow={10}>
-
-              {!this.everSearched() &&
+            <EuiFlexItem className="zentity-explore" grow={10}>
+              {!this.everSearched() && (
                 <EuiFlexGroup>
-
-                  <EuiFlexItem grow={2}>
-                    {/* Spacer */}
-                  </EuiFlexItem>
+                  <EuiFlexItem grow={2}>{/* Spacer */}</EuiFlexItem>
 
                   <EuiFlexItem grow={6}>
+                    <EuiSpacer size="xxl" />
+                    <EuiIcon type="training" size="xxl" />
+                    <EuiSpacer size="xxl" />
 
-                    <EuiSpacer size='xxl'/>
-                    <EuiIcon type='training' size='xxl'/>
-                    <EuiSpacer size='xxl'/>
+                    <EuiText textAlign="left">
+                      <h2>Getting started</h2>
+                    </EuiText>
 
-                    <EuiText textAlign='left'><h2>Getting started</h2></EuiText>
+                    <EuiSpacer size="m" />
 
-                    <EuiSpacer size='m'/>
-
-                    <EuiText textAlign='left'>
+                    <EuiText textAlign="left">
                       <>
                         <p>
                           <ol>
-                            <li>Select an <b>entity type</b>.</li>
-                            <li>Enter <b>search terms</b> for your known entity.</li>
-                            <li>Click <b>Resolve</b> to find matches for your entity.</li>
+                            <li>
+                              Select an <b>entity type</b>.
+                            </li>
+                            <li>
+                              Enter <b>search terms</b> for your known entity.
+                            </li>
+                            <li>
+                              Click <b>Resolve</b> to find matches for your entity.
+                            </li>
                           </ol>
                         </p>
 
-                        <EuiSpacer size='m'/>
+                        <EuiSpacer size="m" />
 
                         <EuiTitle>
-                          <EuiText textAlign='left'>
+                          <EuiText textAlign="left">
                             <h2>Search syntax</h2>
                           </EuiText>
                         </EuiTitle>
 
-                        <EuiSpacer size='m'/>
+                        <EuiSpacer size="m" />
 
                         <EuiDescriptionList
-                          type='responsiveColumn'
+                          type="responsiveColumn"
                           titleProps={{
-                            style: { width: '20%' }
+                            style: { width: '20%' },
                           }}
                           descriptionProps={{
-                            style: { width: '80%' }
+                            style: { width: '80%' },
                           }}
                           style={{ maxWidth: '840px' }}
                           listItems={[
                             {
-                              title: (<>
-                                <EuiTitle>
-                                  <EuiText color='subdued'>
-                                    Free text
-                                  </EuiText>
-                                </EuiTitle>
-                                <EuiSpacer size='s'/>
-                              </>),
-                              description: (<>
-                                <EuiTextColor color='accent'><code>Allie Jones 202-555-1234 "123 Main St"</code></EuiTextColor>
-                                <br/>
-                                <EuiTextColor color='muted'>
-                                  <small>Terms are separated by spaces unless surrounded by double quotes: <EuiTextColor color='accent'><code>"</code></EuiTextColor></small>
-                                </EuiTextColor>
-                                <EuiSpacer size='s'/>
-                              </>)
-                            },
-                            {
-                              title: (<>
-                                <EuiTitle>
-                                  <EuiText color='subdued'>
-                                    Structured
-                                  </EuiText>
-                                </EuiTitle>
-                                <EuiSpacer size='s'/>
-                              </>),
-                              description: (<>
-                                <code>
-                                  <EuiTextColor color='subdued'>
-                                    <EuiTextColor color='secondary'>first_name</EuiTextColor>:<EuiTextColor color='accent'>Allie</EuiTextColor>&nbsp;
-                                    <EuiTextColor color='secondary'>last_name</EuiTextColor>:<EuiTextColor color='accent'>Jones</EuiTextColor>&nbsp;
-                                    <EuiTextColor color='secondary'>phone</EuiTextColor>:<EuiTextColor color='accent'>202-555-1234</EuiTextColor>&nbsp;
-                                    <EuiTextColor color='secondary'>street</EuiTextColor>:<EuiTextColor color='accent'>"123 Main St"</EuiTextColor>
+                              title: (
+                                <>
+                                  <EuiTitle>
+                                    <EuiText color="subdued">Free text</EuiText>
+                                  </EuiTitle>
+                                  <EuiSpacer size="s" />
+                                </>
+                              ),
+                              description: (
+                                <>
+                                  <EuiTextColor color="accent">
+                                    <code>Allie Jones 202-555-1234 "123 Main St"</code>
                                   </EuiTextColor>
-                                </code>
-                                <br/>
-                                <EuiTextColor color='muted'>
-                                  <><small>Attribute names and values are separated by a colon: <EuiTextColor color='accent'><code>:</code></EuiTextColor></small></>
-                                </EuiTextColor>
-                                <EuiSpacer size='s'/>
-                              </>)
+                                  <br />
+                                  <EuiTextColor color="muted">
+                                    <small>
+                                      Terms are separated by spaces unless surrounded by double quotes:{' '}
+                                      <EuiTextColor color="accent">
+                                        <code>"</code>
+                                      </EuiTextColor>
+                                    </small>
+                                  </EuiTextColor>
+                                  <EuiSpacer size="s" />
+                                </>
+                              ),
                             },
                             {
-                              title: (<>
-                                <EuiTitle>
-                                  <EuiText color='subdued'>
-                                    Mixed
-                                  </EuiText>
-                                </EuiTitle>
-                                <EuiSpacer size='s'/>
-                              </>),
+                              title: (
+                                <>
+                                  <EuiTitle>
+                                    <EuiText color="subdued">Structured</EuiText>
+                                  </EuiTitle>
+                                  <EuiSpacer size="s" />
+                                </>
+                              ),
                               description: (
                                 <>
                                   <code>
-                                    <EuiTextColor color='subdued'>
-                                      <EuiTextColor color='secondary'>first_name</EuiTextColor>:<EuiTextColor color='accent'>Allie</EuiTextColor>&nbsp;
-                                      <EuiTextColor color='secondary'>last_name</EuiTextColor>:<EuiTextColor color='accent'>Jones</EuiTextColor>&nbsp;
-                                      <EuiTextColor color='accent'>202-555-1234 "123 Main St"</EuiTextColor>
+                                    <EuiTextColor color="subdued">
+                                      <EuiTextColor color="secondary">first_name</EuiTextColor>:
+                                      <EuiTextColor color="accent">Allie</EuiTextColor>&nbsp;
+                                      <EuiTextColor color="secondary">last_name</EuiTextColor>:
+                                      <EuiTextColor color="accent">Jones</EuiTextColor>&nbsp;
+                                      <EuiTextColor color="secondary">phone</EuiTextColor>:
+                                      <EuiTextColor color="accent">202-555-1234</EuiTextColor>&nbsp;
+                                      <EuiTextColor color="secondary">street</EuiTextColor>:
+                                      <EuiTextColor color="accent">"123 Main St"</EuiTextColor>
                                     </EuiTextColor>
                                   </code>
-                                  <br/>
-                                  <EuiTextColor color='muted'>
+                                  <br />
+                                  <EuiTextColor color="muted">
+                                    <>
+                                      <small>
+                                        Attribute names and values are separated by a colon:{' '}
+                                        <EuiTextColor color="accent">
+                                          <code>:</code>
+                                        </EuiTextColor>
+                                      </small>
+                                    </>
+                                  </EuiTextColor>
+                                  <EuiSpacer size="s" />
+                                </>
+                              ),
+                            },
+                            {
+                              title: (
+                                <>
+                                  <EuiTitle>
+                                    <EuiText color="subdued">Mixed</EuiText>
+                                  </EuiTitle>
+                                  <EuiSpacer size="s" />
+                                </>
+                              ),
+                              description: (
+                                <>
+                                  <code>
+                                    <EuiTextColor color="subdued">
+                                      <EuiTextColor color="secondary">first_name</EuiTextColor>:
+                                      <EuiTextColor color="accent">Allie</EuiTextColor>&nbsp;
+                                      <EuiTextColor color="secondary">last_name</EuiTextColor>:
+                                      <EuiTextColor color="accent">Jones</EuiTextColor>&nbsp;
+                                      <EuiTextColor color="accent">202-555-1234 "123 Main St"</EuiTextColor>
+                                    </EuiTextColor>
+                                  </code>
+                                  <br />
+                                  <EuiTextColor color="muted">
                                     <small>You can combine free text search and structured search.</small>
                                   </EuiTextColor>
-                                  <EuiSpacer size='s'/>
+                                  <EuiSpacer size="s" />
                                 </>
-                              )
+                              ),
                             },
                           ]}
                         />
                       </>
                     </EuiText>
-
                   </EuiFlexItem>
 
-                  <EuiFlexItem grow={2}>
-                    {/* Spacer */}
-                  </EuiFlexItem>
-
+                  <EuiFlexItem grow={2}>{/* Spacer */}</EuiFlexItem>
                 </EuiFlexGroup>
-              }
+              )}
+
+              {this.everSearched() && (
+                <>
+                  <EuiTabs>{this.renderTabs()}</EuiTabs>
+
+                  <EuiSpacer />
+                </>
+              )}
 
               {this.everSearched() &&
-                <>
-                <EuiTabs>
-                  {this.renderTabs()}
-                </EuiTabs>
+                this.state.tab === 'summary' &&
+                this.state.resolution.lastSuccess.response.body && (
+                  <ExploreSummary documents={this.state.resolution.lastSuccess.response.body.hits.hits} />
+                )}
 
-                <EuiSpacer/>
-                </>
-              }
+              {this.everSearched() &&
+                this.state.tab === 'documents' &&
+                this.state.resolution.lastSuccess.response.body && (
+                  <ExploreDocumentsTable documents={this.state.resolution.lastSuccess.response.body.hits.hits} />
+                )}
 
-              {this.everSearched() && this.state.tab === 'summary' && this.state.resolution.lastSuccess.response.body &&
-                <ExploreSummary
-                  documents={this.state.resolution.lastSuccess.response.body.hits.hits}
-                />
-              }
-
-              {this.everSearched() && this.state.tab === 'documents' && this.state.resolution.lastSuccess.response.body &&
-                <ExploreDocumentsTable
-                  documents={this.state.resolution.lastSuccess.response.body.hits.hits}
-                />
-              }
-
-              {this.everSearched() && this.state.tab === 'explanation' && this.state.resolution.lastSuccess.response.body &&
-                <ExploreExplanation
-                  documents={this.state.resolution.lastSuccess.response.body.hits.hits}
-                  request={this.state.resolution.lastSuccess.request}
-                />
-              }
-
-              {this.everSearched() && this.state.tab === 'request' && this.state.resolution.lastSuccess.request.data &&
-                <EuiPanel>
-                  <CodeEditor
-                    isReadOnly={true}
-                    value={this.state.resolution.lastSuccess.requestString}
+              {this.everSearched() &&
+                this.state.tab === 'explanation' &&
+                this.state.resolution.lastSuccess.response.body && (
+                  <ExploreExplanation
+                    documents={this.state.resolution.lastSuccess.response.body.hits.hits}
+                    request={this.state.resolution.lastSuccess.request}
                   />
-                </EuiPanel>
-              }
+                )}
 
-              {this.everSearched() && this.state.tab === 'response' && this.state.resolution.lastSuccess.response.body &&
-                <EuiPanel>
-                  <CodeEditor
-                    isReadOnly={true}
-                    value={this.state.resolution.lastSuccess.responseString}
-                  />
-                </EuiPanel>
-              }
+              {this.everSearched() &&
+                this.state.tab === 'request' &&
+                this.state.resolution.lastSuccess.request.data && (
+                  <EuiPanel>
+                    <CodeEditor isReadOnly={true} value={this.state.resolution.lastSuccess.requestString} />
+                  </EuiPanel>
+                )}
 
+              {this.everSearched() &&
+                this.state.tab === 'response' &&
+                this.state.resolution.lastSuccess.response.body && (
+                  <EuiPanel>
+                    <CodeEditor isReadOnly={true} value={this.state.resolution.lastSuccess.responseString} />
+                  </EuiPanel>
+                )}
             </EuiFlexItem>
           </EuiFlexGroup>
         </EuiPageBody>

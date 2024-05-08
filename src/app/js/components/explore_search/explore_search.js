@@ -19,7 +19,6 @@ import { cloneDeep } from 'lodash'
 const utils = require('../../utils')
 
 export class ExploreSearch extends React.Component {
-
   constructor(props) {
     super(props)
 
@@ -28,7 +27,7 @@ export class ExploreSearch extends React.Component {
       models: this.props.models,
       loading: this.props.loading,
       isEntityTypePopoverOpen: false,
-      isIndicesPopoverOpen: false
+      isIndicesPopoverOpen: false,
     }
 
     this.onChangeEntityTypeOption = this.onChangeEntityTypeOption.bind(this)
@@ -47,15 +46,18 @@ export class ExploreSearch extends React.Component {
   // update this state and reset the form.
   componentDidUpdate(oldProps) {
     if (this.props.models !== oldProps.models) {
-      this.setState({
-        models: this.props.models
-      }, () => {
-        this.resetForm()
-      })
+      this.setState(
+        {
+          models: this.props.models,
+        },
+        () => {
+          this.resetForm()
+        }
+      )
     }
     if (this.props.loading !== oldProps.loading) {
       this.setState({
-        loading: this.props.loading
+        loading: this.props.loading,
       })
     }
   }
@@ -63,11 +65,7 @@ export class ExploreSearch extends React.Component {
   componentDidCatch(error, info) {
     this.props.onAddToast({
       title: error,
-      text: (
-        <p>
-          {info}
-        </p>
-      )
+      text: <p>{info}</p>,
     })
   }
 
@@ -79,18 +77,18 @@ export class ExploreSearch extends React.Component {
         attributes: {},
         indices: [],
         indicesQuery: '',
-        query: ''
+        query: '',
       },
       options: {
         entityTypes: [],
         attributes: [],
         indices: [],
-        resolvers: []
+        resolvers: [],
       },
       optionsSelected: {
         entityType: [],
-        numIndices: 0
-      }
+        numIndices: 0,
+      },
     }
     return form
   }
@@ -103,18 +101,21 @@ export class ExploreSearch extends React.Component {
     for (var entityType in this.state.models) {
       const entityTypeOption = {
         label: entityType,
-        name: entityType
+        name: entityType,
       }
       form.options.entityTypes.push(entityTypeOption)
     }
-    form.options.entityTypes.sort((a, b) => (a.label > b.label) ? 1 : -1)
+    form.options.entityTypes.sort((a, b) => (a.label > b.label ? 1 : -1))
 
-    this.setState({
-      form: form
-    }, () => {
-      console.debug('Reset form: State')
-      console.debug(this.state)
-    })
+    this.setState(
+      {
+        form: form,
+      },
+      () => {
+        console.debug('Reset form: State')
+        console.debug(this.state)
+      }
+    )
   }
 
   onChangeEntityTypeOption(item) {
@@ -126,10 +127,8 @@ export class ExploreSearch extends React.Component {
     form.input.entityType = item.name
     for (var i in form.options.entityTypes) {
       if (item.name === form.options.entityTypes[i].name) {
-        if (form.options.entityTypes[i].checked !== 'on')
-          form.options.entityTypes[i].checked = 'on'
-        else
-          return // Entity type hasn't changed. Don't change anything else.
+        if (form.options.entityTypes[i].checked !== 'on') form.options.entityTypes[i].checked = 'on'
+        else return // Entity type hasn't changed. Don't change anything else.
       } else {
         form.options.entityTypes[i].checked = undefined
       }
@@ -144,12 +143,12 @@ export class ExploreSearch extends React.Component {
       var attribute = model.attributes[attributeName]
       var attributesOption = {
         label: attributeName,
-        name: attributeName
+        name: attributeName,
       }
       form.options.attributes.push(attributesOption)
       form.input.attributes[attributeName] = []
     }
-    form.options.attributes.sort((a, b) => (a.label > b.label) ? 1 : -1)
+    form.options.attributes.sort((a, b) => (a.label > b.label ? 1 : -1))
 
     // Reset form options for indices
     form.options.indices = []
@@ -158,24 +157,25 @@ export class ExploreSearch extends React.Component {
       var indicesOption = {
         name: indexName,
         label: indexName,
-        checked: 'on'
+        checked: 'on',
       }
       form.options.indices.push(indicesOption)
       form.input.indices.push(indicesOption)
     }
-    form.options.indices.sort((a, b) => (a.label > b.label) ? 1 : -1)
+    form.options.indices.sort((a, b) => (a.label > b.label ? 1 : -1))
     form.optionsSelected.numIndices = 0
-    for (var i in form.options.indices)
-      if (form.options.indices[i].checked === 'on')
-        form.optionsSelected.numIndices++
+    for (var i in form.options.indices) if (form.options.indices[i].checked === 'on') form.optionsSelected.numIndices++
 
     // Apply new state
-    this.setState({
-      form: form
-    }, () => {
-      console.debug('Change entity type: State')
-      console.debug(this.state)
-    })
+    this.setState(
+      {
+        form: form,
+      },
+      () => {
+        console.debug('Change entity type: State')
+        console.debug(this.state)
+      }
+    )
   }
 
   onClickEntityTypeButton() {
@@ -194,11 +194,14 @@ export class ExploreSearch extends React.Component {
     console.debug('onChangeEntityTypeQuery()')
     const form = this.state.form
     form.input.entityTypeQuery = event.target.value
-    this.setState({
-      form: form,
-    }, () => {
-      console.debug(this.state)
-    })
+    this.setState(
+      {
+        form: form,
+      },
+      () => {
+        console.debug(this.state)
+      }
+    )
   }
 
   /**
@@ -217,12 +220,15 @@ export class ExploreSearch extends React.Component {
       form.options.indices[idx].checked = 'on'
       form.optionsSelected.numIndices++
     }
-    this.setState({
-      form: form
-    }, () => {
-      console.debug('Toggle index: State')
-      console.debug(this.state)
-    })
+    this.setState(
+      {
+        form: form,
+      },
+      () => {
+        console.debug('Toggle index: State')
+        console.debug(this.state)
+      }
+    )
   }
 
   onClickIndicesButton() {
@@ -241,22 +247,28 @@ export class ExploreSearch extends React.Component {
     console.debug('onChangeIndicesQuery()')
     const form = this.state.form
     form.input.indicesQuery = event.target.value
-    this.setState({
-      form: form,
-    }, () => {
-      console.debug(this.state)
-    })
+    this.setState(
+      {
+        form: form,
+      },
+      () => {
+        console.debug(this.state)
+      }
+    )
   }
 
   onChangeSearchQuery(event) {
     console.debug('onChangeSearchQuery()')
     const form = this.state.form
     form.input.query = event.target.value
-    this.setState({
-      form: form,
-    }, () => {
-      console.debug(this.state)
-    })
+    this.setState(
+      {
+        form: form,
+      },
+      () => {
+        console.debug(this.state)
+      }
+    )
   }
 
   onSubmitSearchQuery() {
@@ -274,33 +286,27 @@ export class ExploreSearch extends React.Component {
       console.debug('Parsed query:')
       console.debug(esQuery)
       if (esQuery && model) {
-
         // Parse query from search bar and submit resolution query
         const input = utils.esQueryToResolutionInput(esQuery, model.attributes)
         const request = {
           entity_type: this.state.form.input.entityType,
           params: {
             _explanation: true,
-            _score: true
+            _score: true,
           },
-          data: {}
+          data: {},
         }
-        if (Object.keys(input.attributes).length > 0)
-            request.data.attributes = input.attributes
-        if (input.terms.length > 0)
-            request.data.terms = input.terms
+        if (Object.keys(input.attributes).length > 0) request.data.attributes = input.attributes
+        if (input.terms.length > 0) request.data.terms = input.terms
 
         // Scope the resolution to specific indices.
         if (this.state.form.optionsSelected.numIndices != this.state.form.options.indices.length) {
-          if (request.data.scope === undefined)
-            request.data.scope = {}
+          if (request.data.scope === undefined) request.data.scope = {}
           for (var i in this.state.form.options.indices) {
             const index = this.state.form.options.indices[i]
             if (index.checked === 'on') {
-              if (request.data.scope.include === undefined)
-                request.data.scope.include = {}
-              if (request.data.scope.include.indices === undefined)
-                request.data.scope.include.indices = []
+              if (request.data.scope.include === undefined) request.data.scope.include = {}
+              if (request.data.scope.include.indices === undefined) request.data.scope.include.indices = []
               request.data.scope.include.indices.push(index.name)
             }
           }
@@ -315,21 +321,17 @@ export class ExploreSearch extends React.Component {
   }
 
   render() {
-
     const entityTypeButton = (
       <EuiFilterButton
-        iconType='arrowDown'
+        iconType="arrowDown"
         isLoading={this.state.loading}
         onClick={this.onClickEntityTypeButton}
         isSelected={this.state.isEntityTypePopoverOpen}
         hasActiveFilters={!!this.state.form.input.entityType}
-        grow={true}>
-        { !this.state.form.input.entityType &&
-          <>Entity type</>
-        }
-        { !!this.state.form.input.entityType &&
-          <>{this.state.form.input.entityType}</>
-        }
+        grow={true}
+      >
+        {!this.state.form.input.entityType && <>Entity type</>}
+        {!!this.state.form.input.entityType && <>{this.state.form.input.entityType}</>}
       </EuiFilterButton>
     )
 
@@ -350,7 +352,7 @@ export class ExploreSearch extends React.Component {
     }
     if (!entityTypesFilteredMatches) {
       entityTypesFiltered.push(
-        <EuiText key='0' size='s' color='subdued' textAlign='center' style={{ 'padding': '10px' }}>
+        <EuiText key="0" size="s" color="subdued" textAlign="center" style={{ padding: '10px' }}>
           No matching entity types.
         </EuiText>
       )
@@ -358,14 +360,15 @@ export class ExploreSearch extends React.Component {
 
     const indicesButton = (
       <EuiFilterButton
-        iconType='arrowDown'
+        iconType="arrowDown"
         onClick={this.onClickIndicesButton}
         isSelected={this.state.isIndicesPopoverOpen}
         numFilters={0}
         hasActiveFilters={this.state.form.optionsSelected.numIndices > 0}
         isDisabled={this.state.form.options.indices.length == 0}
         numActiveFilters={this.state.form.optionsSelected.numIndices}
-        grow={true}>
+        grow={true}
+      >
         Indices
       </EuiFilterButton>
     )
@@ -387,7 +390,7 @@ export class ExploreSearch extends React.Component {
     }
     if (!indicesFilteredMatches) {
       indicesFiltered.push(
-        <EuiText key='0' size='s' color='subdued' textAlign='center' style={{ 'padding': '10px' }}>
+        <EuiText key="0" size="s" color="subdued" textAlign="center" style={{ padding: '10px' }}>
           No matching indices.
         </EuiText>
       )
@@ -395,27 +398,27 @@ export class ExploreSearch extends React.Component {
 
     return (
       <EuiForm>
-        <EuiFlexGroup gutterSize='s'>
-
+        <EuiFlexGroup gutterSize="s">
           <EuiFlexItem grow={2}>
-            <EuiFlexGroup gutterSize='s' responsive={false}>
+            <EuiFlexGroup gutterSize="s" responsive={false}>
               <EuiFlexItem grow={true}>
                 <EuiFilterGroup>
                   <EuiPopover
-                    id='popover'
+                    id="popover"
                     ownFocus
                     button={entityTypeButton}
                     isOpen={this.state.isEntityTypePopoverOpen}
                     closePopover={this.onCloseEntityTypePopover}
-                    panelPaddingSize='none'>
+                    panelPaddingSize="none"
+                  >
                     <EuiPopoverTitle>
                       <EuiFieldSearch
                         value={this.state.form.input.entityTypeQuery}
                         onChange={this.onChangeEntityTypeQuery}
                       />
                     </EuiPopoverTitle>
-                    <div className='euiFilterSelect__items' style={{ maxHeight: '200px', width: '400px' }}>
-                      { entityTypesFiltered }
+                    <div className="euiFilterSelect__items" style={{ maxHeight: '200px', width: '400px' }}>
+                      {entityTypesFiltered}
                     </div>
                   </EuiPopover>
                 </EuiFilterGroup>
@@ -424,20 +427,18 @@ export class ExploreSearch extends React.Component {
               <EuiFlexItem grow={true}>
                 <EuiFilterGroup>
                   <EuiPopover
-                    id='popover'
+                    id="popover"
                     ownFocus
                     button={indicesButton}
                     isOpen={this.state.isIndicesPopoverOpen}
                     closePopover={this.onCloseIndicesPopover}
-                    panelPaddingSize='none'>
+                    panelPaddingSize="none"
+                  >
                     <EuiPopoverTitle>
-                      <EuiFieldSearch
-                        value={this.state.form.input.indicesQuery}
-                        onChange={this.onChangeIndicesQuery}
-                      />
+                      <EuiFieldSearch value={this.state.form.input.indicesQuery} onChange={this.onChangeIndicesQuery} />
                     </EuiPopoverTitle>
-                    <div className='euiFilterSelect__items' style={{ maxHeight: '200px', width: '400px' }}>
-                      { indicesFiltered }
+                    <div className="euiFilterSelect__items" style={{ maxHeight: '200px', width: '400px' }}>
+                      {indicesFiltered}
                     </div>
                   </EuiPopover>
                 </EuiFilterGroup>
@@ -448,28 +449,31 @@ export class ExploreSearch extends React.Component {
           <EuiFlexItem grow={7}>
             <EuiFieldSearch
               fullWidth
-              placeholder='Search...'
+              placeholder="Search..."
               value={this.state.form.input.query}
               onChange={this.onChangeSearchQuery}
               onSearch={this.onSubmitSearchQuery}
               disabled={this.state.loading}
               isLoading={this.state.loading}
-              />
+            />
           </EuiFlexItem>
 
           <EuiFlexItem grow={1}>
             <EuiButton
-              type='submit'
+              type="submit"
               fill
               fullWidth
-              iconType='inspect'
+              iconType="inspect"
               onClick={this.onSubmitSearchQuery}
-              isDisabled={this.state.loading || this.state.form.optionsSelected.numIndices === 0 || this.state.form.input.query.trim() === ''}
+              isDisabled={
+                this.state.loading ||
+                this.state.form.optionsSelected.numIndices === 0 ||
+                this.state.form.input.query.trim() === ''
+              }
             >
               Resolve
             </EuiButton>
           </EuiFlexItem>
-
         </EuiFlexGroup>
       </EuiForm>
     )

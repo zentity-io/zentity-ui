@@ -1,29 +1,20 @@
 import React from 'react'
 var _ = require('lodash')
-import {
-  EuiButtonIcon,
-  EuiFlexGroup,
-  EuiFlexItem,
-  EuiInMemoryTable,
-  EuiPanel,
-  EuiText,
-} from '@elastic/eui'
+import { EuiButtonIcon, EuiFlexGroup, EuiFlexItem, EuiInMemoryTable, EuiPanel, EuiText } from '@elastic/eui'
 
 import { CodeEditor } from '../code_editor'
 import { ExploreSearchNoResults } from '../explore_search_no_results'
 
 export class ExploreDocumentsTable extends React.Component {
-
   constructor(props) {
     super(props)
 
     this.state = {
       documents: this.resetDocuments(this.props.documents),
-      documentsExpanded: {}
+      documentsExpanded: {},
     }
 
     this.onToggleRowDetails = this.onToggleRowDetails.bind(this)
-
   }
 
   // When the parent updates the documents, update this state.
@@ -31,7 +22,7 @@ export class ExploreDocumentsTable extends React.Component {
     if (this.props.documents !== oldProps.documents) {
       this.setState({
         documents: this.resetDocuments(this.props.documents),
-        documentsExpanded: {}
+        documentsExpanded: {},
       })
     }
   }
@@ -60,74 +51,65 @@ export class ExploreDocumentsTable extends React.Component {
             {
               name: 'Attributes',
               id: item.__doc_row_id__ + '._attributes',
-              onClick: () => {
-
-              },
-              isSelected: true
+              onClick: () => {},
+              isSelected: true,
             },
             {
               name: 'Explanation',
               id: item.__doc_row_id__ + '._explanation',
-              onClick: () => {
-
-              },
-              isSelected: false
+              onClick: () => {},
+              isSelected: false,
             },
             {
               name: 'Source',
               id: item.__doc_row_id__ + '._source',
-              onClick: () => {
-
-              },
-              isSelected: false
+              onClick: () => {},
+              isSelected: false,
             },
             {
               name: 'JSON',
               id: item.__doc_row_id__ + '.json',
-              onClick: () => {
-
-              },
-              isSelected: false
-            }
-          ]
-        }
+              onClick: () => {},
+              isSelected: false,
+            },
+          ],
+        },
       ]
       documentsExpanded[item.__doc_row_id__] = (
         <EuiFlexGroup>
           <EuiFlexItem grow>
             <EuiText>
-              <CodeEditor
-                isReadOnly={true}
-                value={JSON.stringify(_.omit(item, '__doc_row_id__'), null, 2)}
-              />
+              <CodeEditor isReadOnly={true} value={JSON.stringify(_.omit(item, '__doc_row_id__'), null, 2)} />
             </EuiText>
           </EuiFlexItem>
         </EuiFlexGroup>
       )
     }
-    this.setState({
-      documentsExpanded: documentsExpanded
-    }, () => {
-      console.log('toggle row details:')
-      console.log(item)
-      console.log(this.state)
-    })
+    this.setState(
+      {
+        documentsExpanded: documentsExpanded,
+      },
+      () => {
+        console.log('toggle row details:')
+        console.log(item)
+        console.log(this.state)
+      }
+    )
   }
 
   render() {
-
     const columns = [
       {
         width: '40px',
         isExpander: true,
-        render: item => (
+        render: (item) => (
           <EuiButtonIcon
             onClick={() => this.onToggleRowDetails(item)}
             aria-label={this.state.documentsExpanded[item.__doc_row_id__] ? 'Collapse' : 'Expand'}
             iconType={this.state.documentsExpanded[item.__doc_row_id__] ? 'arrowDown' : 'arrowRight'}
           />
-        )
-      }
+        ),
+      },
     ]
     const attributes = {}
     for (var i in this.state.documents) {
@@ -141,7 +123,7 @@ export class ExploreDocumentsTable extends React.Component {
         field: '_attributes.' + attributesNames[i],
         name: attributesNames[i],
         sortable: true,
-        truncateText: false
+        truncateText: false,
       })
     }
     const standardColumns = [
@@ -149,32 +131,32 @@ export class ExploreDocumentsTable extends React.Component {
         field: '_index',
         name: '_index',
         sortable: true,
-        truncateText: false
+        truncateText: false,
       },
       {
         field: '_id',
         name: '_id',
         sortable: true,
-        truncateText: false
+        truncateText: false,
       },
       {
         field: '_hop',
         name: '_hop',
         sortable: true,
-        truncateText: false
+        truncateText: false,
       },
       {
         field: '_query',
         name: '_query',
         sortable: true,
-        truncateText: false
+        truncateText: false,
       },
       {
         field: '_score',
         name: '_score',
         sortable: true,
-        truncateText: false
-      }
+        truncateText: false,
+      },
     ]
     for (var i in standardColumns) {
       columns.push(standardColumns[i])
@@ -183,14 +165,14 @@ export class ExploreDocumentsTable extends React.Component {
     const search = {
       box: {
         incremental: true,
-        placeholder: 'Filter...'
+        placeholder: 'Filter...',
       },
-      filters: []
+      filters: [],
     }
 
     const pagination = {
       initialPageSize: 10,
-      pageSizeOptions: [10, 25, 50]
+      pageSizeOptions: [10, 25, 50],
     }
 
     /*
@@ -205,10 +187,10 @@ export class ExploreDocumentsTable extends React.Component {
     */
     return (
       <EuiPanel>
-        {this.state.documents.length > 0 &&
+        {this.state.documents.length > 0 && (
           <EuiInMemoryTable
             items={this.state.documents}
-            itemId='__doc_row_id__'
+            itemId="__doc_row_id__"
             itemIdToExpandedRowMap={this.state.documentsExpanded}
             columns={columns}
             search={search}
@@ -218,10 +200,8 @@ export class ExploreDocumentsTable extends React.Component {
             isExpandable={true}
             isSelectable={false}
           />
-        }
-        {this.state.documents.length === 0 &&
-          <ExploreSearchNoResults/>
-        }
+        )}
+        {this.state.documents.length === 0 && <ExploreSearchNoResults />}
       </EuiPanel>
     )
   }

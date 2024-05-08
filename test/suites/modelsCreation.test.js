@@ -1,10 +1,9 @@
-const common = require("../common.js")
-const config = require("../config.js")
+const common = require('../common.js')
+const config = require('../config.js')
 
 jest.setTimeout(40 * 1000) // must be higher than Playwright's default 30s
 
 describe('Models creation', () => {
-
   beforeAll(async () => await common.setupIndex())
   afterAll(async () => await common.teardown())
   afterEach(async () => await common.screenshot(page, browserName))
@@ -39,7 +38,7 @@ describe('Models creation', () => {
   })
   it('removes toast when clicking its close button', async () => {
     await page.click('.euiToast__closeButton', config.get('SLA'))
-    await expect(page).toHaveSelector('.euiToast', { state: "detached" })
+    await expect(page).toHaveSelector('.euiToast', { state: 'detached' })
   })
   it('navigates to created model', async () => {
     await expect(page).toHaveText('.euiPageBody > h1', 'zentity_tutorial_4_person', config.get('SLA'))
@@ -83,22 +82,38 @@ describe('Models creation', () => {
   })
   it('has note when attribute score is 0.5', async () => {
     await expect(page).toHaveText('.euiCallOutHeader', 'Note', config.get('SLA'))
-    await expect(page).toHaveText('.euiCallOut .euiText', 'An attribute score of 0.5 will never affect the final identity confidence score.', config.get('SLA'))
+    await expect(page).toHaveText(
+      '.euiCallOut .euiText',
+      'An attribute score of 0.5 will never affect the final identity confidence score.',
+      config.get('SLA')
+    )
   })
   it('has warning when attribute score is between 0.0 and 0.5', async () => {
     await page.fill('#attribute-score', '0.25', config.get('SLA'))
     await expect(page).toHaveText('.euiCallOutHeader', 'Warning', config.get('SLA'))
-    await expect(page).toHaveText('.euiCallOut .euiText', 'An attribute score of less than 0.5 will penalize the final identity confidence score.', config.get('SLA'))
+    await expect(page).toHaveText(
+      '.euiCallOut .euiText',
+      'An attribute score of less than 0.5 will penalize the final identity confidence score.',
+      config.get('SLA')
+    )
   })
   it('has warning when attribute score is 0.0', async () => {
     await page.fill('#attribute-score', '0.0', config.get('SLA'))
     await expect(page).toHaveText('.euiCallOutHeader', 'Warning', config.get('SLA'))
-    await expect(page).toHaveText('.euiCallOut .euiText', 'An attribute score of 0.0 will cause the final identity confidence score to always be 0.0', config.get('SLA'))
+    await expect(page).toHaveText(
+      '.euiCallOut .euiText',
+      'An attribute score of 0.0 will cause the final identity confidence score to always be 0.0',
+      config.get('SLA')
+    )
   })
   it('has warning when attribute score is 1.0', async () => {
     await page.fill('#attribute-score', '1.0', config.get('SLA'))
     await expect(page).toHaveText('.euiCallOutHeader', 'Warning', config.get('SLA'))
-    await expect(page).toHaveText('.euiCallOut .euiText', 'An attribute score of 1.0 will cause the final identity confidence score to always be 1.0', config.get('SLA'))
+    await expect(page).toHaveText(
+      '.euiCallOut .euiText',
+      'An attribute score of 1.0 will cause the final identity confidence score to always be 1.0',
+      config.get('SLA')
+    )
   })
   it('has no warning when attribute score is between 0.5 and 1.0', async () => {
     await page.fill('#attribute-score', '0.75', config.get('SLA'))

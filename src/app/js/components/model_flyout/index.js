@@ -13,7 +13,7 @@ export function ModelFlyout(props) {
    * @param {object} props - Props to pass to the returned component.
    * @return {ModelFlyout} - A React component that extends ModelFlyout.
    */
-  switch(props.type) {
+  switch (props.type) {
     case 'attributes':
       return <ModelFlyoutAttributes {...props} />
     case 'resolvers':

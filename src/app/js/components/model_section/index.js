@@ -13,7 +13,7 @@ export function ModelSection(props) {
    * @param {object} props - Props to pass to the created component.
    * @return {ModelSection} - A React component that extends ModelSection.
    */
-  switch(props.section) {
+  switch (props.section) {
     case 'attributes':
       return <ModelSectionAttributes {...props} />
     case 'resolvers':

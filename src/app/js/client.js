@@ -20,48 +20,49 @@ const randomMillis = (target) => {
 /**
  * Track the start time of each request.
  */
-axios.interceptors.request.use(async (config) => {
-  config.startTime = new Date().getTime()
-  return config
-}, (error) => Promise.reject(error))
+axios.interceptors.request.use(
+  async (config) => {
+    config.startTime = new Date().getTime()
+    return config
+  },
+  (error) => Promise.reject(error)
+)
 
 /**
  * Ensure a proper delay for each request and then process the response data.
  */
-axios.interceptors.response.use(async (response) => {
+axios.interceptors.response.use(
+  async (response) => {
+    // Ensure the each request has some noticable latency as feedback to the user.
+    // If the elapsed time between now and the given startTime is less than that
+    // target amount, impose a delay for the remaining difference.
+    const timeElapsed = new Date().getTime() - response.config.startTime
+    const timeRemaining = randomMillis(TARGET_REQUEST_DELAY) - timeElapsed
+    if (timeElapsed > 0) await sleep(timeRemaining)
 
-  // Ensure the each request has some noticable latency as feedback to the user.
-  // If the elapsed time between now and the given startTime is less than that
-  // target amount, impose a delay for the remaining difference.
-  const timeElapsed = new Date().getTime() - response.config.startTime
-  const timeRemaining = randomMillis(TARGET_REQUEST_DELAY) - timeElapsed
-  if (timeElapsed > 0)
-    await sleep(timeRemaining)
+    // Keep both the raw body and parsed data for all responses.
+    response.body = response.data
+    response.data = response.data ? JSON.parse(response.data) : undefined
+    return response
+  },
+  async (error) => {
+    // Ensure the each request has some noticable latency as feedback to the user.
+    // If the elapsed time between now and the given startTime is less than that
+    // target amount, impose a delay for the remaining difference.
+    const timeElapsed = new Date().getTime() - error.config.startTime
+    const timeRemaining = randomMillis(TARGET_REQUEST_DELAY) - timeElapsed
+    if (timeElapsed > 0) await sleep(timeRemaining)
 
-  // Keep both the raw body and parsed data for all responses.
-  response.body = response.data
-  response.data = response.data ? JSON.parse(response.data) : undefined
-  return response
-
-}, async (error) => {
-
-  // Ensure the each request has some noticable latency as feedback to the user.
-  // If the elapsed time between now and the given startTime is less than that
-  // target amount, impose a delay for the remaining difference.
-  const timeElapsed = new Date().getTime() - error.config.startTime
-  const timeRemaining = randomMillis(TARGET_REQUEST_DELAY) - timeElapsed
-  if (timeElapsed > 0)
-    await sleep(timeRemaining)
-
-  // Keep both the raw body and parsed data for all responses.
-  try {
-    error.response.body = error.response.data
-    error.response.data = error.response.data ? JSON.parse(error.response.data) : undefined
-  } catch (e) {
-    console.error(e)
+    // Keep both the raw body and parsed data for all responses.
+    try {
+      error.response.body = error.response.data
+      error.response.data = error.response.data ? JSON.parse(error.response.data) : undefined
+    } catch (e) {
+      console.error(e)
+    }
+    return Promise.reject(error)
   }
-  return Promise.reject(error)
-})
+)
 
 /**
  * Submit a request to the zentity-ui server.
@@ -79,7 +80,7 @@ const request = (path, opts) => {
     transformResponse: (res) => {
       // Disable JSON parsing to return the exact response from Elasticsearch
       return res
-    }
+    },
   })
 }
 

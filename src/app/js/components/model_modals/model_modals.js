@@ -1,13 +1,6 @@
 import React from 'react'
 
-import {
-  EuiCode,
-  EuiConfirmModal,
-  EuiFieldText,
-  EuiFormRow,
-  EuiProgress,
-  EuiTitle
-} from '@elastic/eui'
+import { EuiCode, EuiConfirmModal, EuiFieldText, EuiFormRow, EuiProgress, EuiTitle } from '@elastic/eui'
 
 /**
  * Expected props:
@@ -32,31 +25,33 @@ import {
  * - onConfirmActionRename  (function)
  */
 export function ModelModals(props) {
-
   let modalClone
   if (!!props.modalClone) {
     modalClone = (
       <EuiConfirmModal
-        title={<EuiTitle><h2>Clone</h2></EuiTitle>}
+        title={
+          <EuiTitle>
+            <h2>Clone</h2>
+          </EuiTitle>
+        }
         onCancel={props.onCloseModalClone}
         onConfirm={() => props.onConfirmActionClone(props.modalClone, props.modalCloneName)}
-        cancelButtonText='Cancel'
-        confirmButtonText='Clone'
+        cancelButtonText="Cancel"
+        confirmButtonText="Clone"
         confirmButtonDisabled={props.modalCloneName === ''}
-        buttonColor='primary'
-        initialFocus='[name=modal-clone-name]'>
-        { props.loading &&
-        <EuiProgress size='xs' color='accent' position='absolute' />
-        }
+        buttonColor="primary"
+        initialFocus="[name=modal-clone-name]"
+      >
+        {props.loading && <EuiProgress size="xs" color="accent" position="absolute" />}
         <EuiFormRow>
           <EuiCode>{props.modalClone}</EuiCode>
         </EuiFormRow>
-        <EuiFormRow label='New name'>
+        <EuiFormRow label="New name">
           <EuiFieldText
             value={props.modalCloneName}
-            placeholder='Name...'
+            placeholder="Name..."
             onChange={(e) => props.onChangeModalClone(e.currentTarget.value)}
-            name='modal-clone-name'
+            name="modal-clone-name"
           />
         </EuiFormRow>
       </EuiConfirmModal>
@@ -67,23 +62,26 @@ export function ModelModals(props) {
   if (!!props.modalCreate) {
     modalCreate = (
       <EuiConfirmModal
-        title={<EuiTitle><h2>Create</h2></EuiTitle>}
+        title={
+          <EuiTitle>
+            <h2>Create</h2>
+          </EuiTitle>
+        }
         onCancel={props.onCloseModalCreate}
         onConfirm={() => props.onConfirmActionCreate(props.modalCreateName)}
-        cancelButtonText='Cancel'
-        confirmButtonText='Create'
+        cancelButtonText="Cancel"
+        confirmButtonText="Create"
         confirmButtonDisabled={props.modalCreateName === ''}
-        buttonColor='primary'
-        initialFocus='[name=modal-create-name]'>
-        { props.loading &&
-        <EuiProgress size='xs' color='accent' position='absolute' />
-        }
-        <EuiFormRow label='Name'>
+        buttonColor="primary"
+        initialFocus="[name=modal-create-name]"
+      >
+        {props.loading && <EuiProgress size="xs" color="accent" position="absolute" />}
+        <EuiFormRow label="Name">
           <EuiFieldText
             value={props.modalCreateName}
-            placeholder='Name...'
+            placeholder="Name..."
             onChange={(e) => props.onChangeModalCreate(e.currentTarget.value)}
-            name='modal-create-name'
+            name="modal-create-name"
           />
         </EuiFormRow>
       </EuiConfirmModal>
@@ -94,16 +92,19 @@ export function ModelModals(props) {
   if (!!props.modalDelete) {
     modalDelete = (
       <EuiConfirmModal
-        title={<EuiTitle><h2>Delete</h2></EuiTitle>}
+        title={
+          <EuiTitle>
+            <h2>Delete</h2>
+          </EuiTitle>
+        }
         onCancel={props.onCloseModalDelete}
         onConfirm={() => props.onConfirmActionDelete(props.modalDelete)}
-        cancelButtonText='Cancel'
-        confirmButtonText='Delete'
-        buttonColor='danger'
-        defaultFocusedButton='cancel'>
-        { props.loading &&
-        <EuiProgress size='xs' color='accent' position='absolute' />
-        }
+        cancelButtonText="Cancel"
+        confirmButtonText="Delete"
+        buttonColor="danger"
+        defaultFocusedButton="cancel"
+      >
+        {props.loading && <EuiProgress size="xs" color="accent" position="absolute" />}
         <EuiCode>{props.modalDelete}</EuiCode>
       </EuiConfirmModal>
     )
@@ -113,36 +114,41 @@ export function ModelModals(props) {
   if (!!props.modalRename) {
     modalRename = (
       <EuiConfirmModal
-        title={<EuiTitle><h2>Rename</h2></EuiTitle>}
+        title={
+          <EuiTitle>
+            <h2>Rename</h2>
+          </EuiTitle>
+        }
         onCancel={props.onCloseModalRename}
         onConfirm={() => props.onConfirmActionRename(props.modalRename, props.modalRenameName)}
-        cancelButtonText='Cancel'
-        confirmButtonText='Rename'
+        cancelButtonText="Cancel"
+        confirmButtonText="Rename"
         confirmButtonDisabled={props.modalRenameName === ''}
-        buttonColor='primary'
-        initialFocus='[name=modal-rename-name]'>
-        { props.loading &&
-        <EuiProgress size='xs' color='accent' position='absolute' />
-        }
+        buttonColor="primary"
+        initialFocus="[name=modal-rename-name]"
+      >
+        {props.loading && <EuiProgress size="xs" color="accent" position="absolute" />}
         <EuiFormRow>
           <EuiCode>{props.modalRename}</EuiCode>
         </EuiFormRow>
-        <EuiFormRow label='New name'>
+        <EuiFormRow label="New name">
           <EuiFieldText
             value={props.modalRenameName}
-            placeholder='Name...'
+            placeholder="Name..."
             onChange={(e) => props.onChangeModalRename(e.currentTarget.value)}
-            name='modal-rename-name'
+            name="modal-rename-name"
           />
         </EuiFormRow>
       </EuiConfirmModal>
     )
   }
 
-  return (<>
-    {modalClone}
-    {modalCreate}
-    {modalDelete}
-    {modalRename}
-  </>)
+  return (
+    <>
+      {modalClone}
+      {modalCreate}
+      {modalDelete}
+      {modalRename}
+    </>
+  )
 }

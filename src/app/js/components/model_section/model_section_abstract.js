@@ -2,9 +2,7 @@ import React from 'react'
 
 import { cloneDeep, get, isEqual } from 'lodash'
 
-import {
-  EuiProgress,
-} from '@elastic/eui'
+import { EuiProgress } from '@elastic/eui'
 
 import { ModelFlyout } from '../model_flyout'
 import { ModelModals } from '../model_modals'
@@ -15,7 +13,6 @@ import { ModelTable } from '../model_table'
  * can be converted into static values referenced by this one component.
  */
 export class ModelSectionAbstract extends React.Component {
-
   /**
    * @constructor
    * @param {object}  modelCopy - 'model' as locally modified in this application
@@ -26,25 +23,24 @@ export class ModelSectionAbstract extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-
       // Model state
       modelCopy: this.props.modelCopy,
       modelDiff: this.props.modelDiff,
 
       // Modal state
-      modalClone: null,     // Name of the object to be cloned
-      modalCloneName: '',   // New name of the object to be cloned
-      modalCreate: null,    // Whether (true) a new object should be created
-      modalCreateName: '',  // Name of the object to be created
-      modalDelete: null,    // Name of the object to be deleted
-      modalRename: null,    // Name of the object to be renamed
-      modalRenameName: '',  // New name of the object to be renamed
+      modalClone: null, // Name of the object to be cloned
+      modalCloneName: '', // New name of the object to be cloned
+      modalCreate: null, // Whether (true) a new object should be created
+      modalCreateName: '', // Name of the object to be created
+      modalDelete: null, // Name of the object to be deleted
+      modalRename: null, // Name of the object to be renamed
+      modalRenameName: '', // New name of the object to be renamed
 
       // Name of object selected from sidebar table
       selected: get(this.props, 'match.params.selected') || null,
 
       // Name of object being created
-      creating: null
+      creating: null,
     }
 
     // Must be implemented by child class.
@@ -104,10 +100,8 @@ export class ModelSectionAbstract extends React.Component {
     const newModelCopy = !isEqual(this.props.modelCopy, prevProps.modelCopy)
     const newModelDiff = !isEqual(this.props.modelDiff, prevProps.modelDiff)
     const newState = {}
-    if (!isEqual(this.props.modelCopy, prevProps.modelCopy))
-      newState.modelCopy = this.props.modelCopy
-    if (!isEqual(this.props.modelDiff, prevProps.modelDiff))
-      newState.modelDiff = this.props.modelDiff
+    if (!isEqual(this.props.modelCopy, prevProps.modelCopy)) newState.modelCopy = this.props.modelCopy
+    if (!isEqual(this.props.modelDiff, prevProps.modelDiff)) newState.modelDiff = this.props.modelDiff
     if (!!newState.modelCopy && !!newState.modelCopy[this.section]) {
       // If the current selection is a new, unsaved object,
       // remove the selection if the new model does not contain it.
@@ -115,10 +109,8 @@ export class ModelSectionAbstract extends React.Component {
       // doesn't have the new, unsaved object.
       const names = []
       if (!!newState.modelCopy && !!newState.modelCopy[this.section])
-        for (var name in newState.modelCopy[this.section])
-          names.push(name)
-      if (!names.includes(this.state.selected))
-        newState.selected = null
+        for (var name in newState.modelCopy[this.section]) names.push(name)
+      if (!names.includes(this.state.selected)) newState.selected = null
     }
 
     // Update state based on any changes to the URL
@@ -126,7 +118,7 @@ export class ModelSectionAbstract extends React.Component {
       newState.selected = get(this.props, 'match.params.selected')
 
     // Apply any new state
-    if(Object.keys(newState).length > 0) {
+    if (Object.keys(newState).length > 0) {
       this.setState(newState, () => {
         console.debug(cloneDeep(this.state.modelCopy))
       })
@@ -189,15 +181,18 @@ export class ModelSectionAbstract extends React.Component {
       console.debug(cloneDeep(this.state))
 
       // Close and reset the clone modal.
-      this.setState({
-        modalClone: null,
-        modalCloneName: ''
-      }, () => {
-        console.debug(cloneDeep(this.state))
+      this.setState(
+        {
+          modalClone: null,
+          modalCloneName: '',
+        },
+        () => {
+          console.debug(cloneDeep(this.state))
 
-        // Select the newly renamed object from the table.
-        this.onChangeSelected(nameNew)
-      })
+          // Select the newly renamed object from the table.
+          this.onChangeSelected(nameNew)
+        }
+      )
     })
   }
 
@@ -217,13 +212,16 @@ export class ModelSectionAbstract extends React.Component {
 
     // Close the modal and open the flyout editor by passing the name
     // of the object to be created.
-    this.setState({
-      modalCreate: null,
-      modalCreateName: '',
-      creating: name
-    }, () => {
-      console.debug(cloneDeep(this.state))
-    })
+    this.setState(
+      {
+        modalCreate: null,
+        modalCreateName: '',
+        creating: name,
+      },
+      () => {
+        console.debug(cloneDeep(this.state))
+      }
+    )
   }
 
   /**
@@ -245,13 +243,16 @@ export class ModelSectionAbstract extends React.Component {
     // without updating the application state yet.
     try {
       modelCopy = this.onDelete(modelCopy, nameDeleted)
-    } catch(e) {
+    } catch (e) {
       console.error(e)
-      this.setState({
-        modalDelete: null
-      }, () => {
-        this.props.onAddToast(e)
-      })
+      this.setState(
+        {
+          modalDelete: null,
+        },
+        () => {
+          this.props.onAddToast(e)
+        }
+      )
     }
 
     // Undo the selection if it was the one that was deleted,
@@ -266,11 +267,14 @@ export class ModelSectionAbstract extends React.Component {
         console.debug(cloneDeep(this.state))
 
         // Close and reset the delete modal.
-        this.setState({
-          modalDelete: null
-        }, () => {
-          console.debug(cloneDeep(this.state))
-        })
+        this.setState(
+          {
+            modalDelete: null,
+          },
+          () => {
+            console.debug(cloneDeep(this.state))
+          }
+        )
       })
     })
   }
@@ -306,16 +310,18 @@ export class ModelSectionAbstract extends React.Component {
         console.debug(cloneDeep(this.state))
 
         // Close and reset the rename modal.
-        this.setState({
-          modalRename: null,
-          modalRenameName: ''
-        }, () => {
-
-          // Select the newly renamed object from the table.
-          this.onChangeSelected(nameNew, () => {
-            console.debug(cloneDeep(this.state))
-          })
-        })
+        this.setState(
+          {
+            modalRename: null,
+            modalRenameName: '',
+          },
+          () => {
+            // Select the newly renamed object from the table.
+            this.onChangeSelected(nameNew, () => {
+              console.debug(cloneDeep(this.state))
+            })
+          }
+        )
       })
     })
   }
@@ -380,12 +386,9 @@ export class ModelSectionAbstract extends React.Component {
    */
   onChangeSelected(selection, callback) {
     console.debug('onChangeSelected()')
-    if (!!selection)
-      window.location.hash = '/models/' + this.props.modelId + '/' + this.section + '/' + selection
-    else
-      window.location.hash = '/models/' + this.props.modelId + '/' + this.section
-    if (callback)
-      callback()
+    if (!!selection) window.location.hash = '/models/' + this.props.modelId + '/' + this.section + '/' + selection
+    else window.location.hash = '/models/' + this.props.modelId + '/' + this.section
+    if (callback) callback()
   }
 
   /**
@@ -396,10 +399,8 @@ export class ModelSectionAbstract extends React.Component {
    */
   onCloseEditor() {
     console.debug('onCloseEditor()')
-    if (this.state.creating)
-      this.setState({ creating: null })
-    else
-      this.onChangeSelected(null)
+    if (this.state.creating) this.setState({ creating: null })
+    else this.onChangeSelected(null)
   }
 
   onCloseModalClone() {
@@ -504,72 +505,71 @@ export class ModelSectionAbstract extends React.Component {
   }
 
   render() {
+    return (
+      <>
+        {(this.props.loading || this.props.saving) && <EuiProgress size="xs" color="accent" position="fixed" />}
 
-    return (<>
+        {/* Selection table */}
+        <ModelTable
+          columns={this.columns}
+          loading={this.props.loading || this.props.saving}
+          model={this.props.model}
+          modelCopy={this.state.modelCopy}
+          modelDiff={this.state.modelDiff}
+          onChangeTab={this.props.onChangeTab}
+          onClickActionClone={this.onClickActionClone}
+          onClickActionCreate={this.onClickActionCreate}
+          onClickActionDelete={this.onClickActionDelete}
+          onClickActionEdit={this.onClickActionEdit}
+          onClickActionRename={this.onClickActionRename}
+          section={this.section} // 'attributes', 'resolvers', 'matchers', or 'indices'
+          selected={this.state.selected}
+        />
 
-      { (this.props.loading || this.props.saving) &&
-      <EuiProgress size='xs' color='accent' position='fixed' />
-      }
+        {/* Flyout editor for creating or editing an object */}
+        {(this.state.creating || this.state.selected) && Object.keys(this.state.modelCopy).length > 0 && (
+          <ModelFlyout
+            type={this.section}
+            loading={this.state.loading || this.state.saving}
+            creating={this.state.creating}
+            name={this.state.creating || this.state.selected}
+            data={
+              this.state.creating
+                ? this.defaultObject
+                : get(this.state, `modelCopy.${this.section}.${this.state.selected}`)
+            }
+            modelCopy={this.state.modelCopy}
+            validations={this.validations}
+            onApply={this.onApplyChanges}
+            onClose={this.onCloseEditor}
+            onShowModalClone={this.onShowModalClone}
+            onShowModalDelete={this.onShowModalDelete}
+          />
+        )}
 
-      {/* Selection table */}
-      <ModelTable
-        columns={this.columns}
-        loading={this.props.loading || this.props.saving}
-        model={this.props.model}
-        modelCopy={this.state.modelCopy}
-        modelDiff={this.state.modelDiff}
-        onChangeTab={this.props.onChangeTab}
-        onClickActionClone={this.onClickActionClone}
-        onClickActionCreate={this.onClickActionCreate}
-        onClickActionDelete={this.onClickActionDelete}
-        onClickActionEdit={this.onClickActionEdit}
-        onClickActionRename={this.onClickActionRename}
-        section={this.section} // 'attributes', 'resolvers', 'matchers', or 'indices'
-        selected={this.state.selected}
-      />
-
-      {/* Flyout editor for creating or editing an object */}
-      { (this.state.creating || this.state.selected) && Object.keys(this.state.modelCopy).length > 0 &&
-
-      <ModelFlyout
-        type={this.section}
-        loading={(this.state.loading || this.state.saving)}
-        creating={this.state.creating}
-        name={this.state.creating || this.state.selected}
-        data={this.state.creating ? this.defaultObject : get(this.state, `modelCopy.${this.section}.${this.state.selected}`)}
-        modelCopy={this.state.modelCopy}
-        validations={this.validations}
-        onApply={this.onApplyChanges}
-        onClose={this.onCloseEditor}
-        onShowModalClone={this.onShowModalClone}
-        onShowModalDelete={this.onShowModalDelete}
-      />
-
-      }
-
-      {/* Modals */}
-      <ModelModals
-        loading={(this.state.loading || this.state.saving)}
-        modalClone={this.state.modalClone}
-        modalCloneName={this.state.modalCloneName}
-        modalCreate={this.state.modalCreate}
-        modalCreateName={this.state.modalCreateName}
-        modalDelete={this.state.modalDelete}
-        modalRename={this.state.modalRename}
-        modalRenameName={this.state.modalRenameName}
-        onChangeModalClone={this.onChangeModalClone}
-        onChangeModalCreate={this.onChangeModalCreate}
-        onChangeModalRename={this.onChangeModalRename}
-        onCloseModalClone={this.onCloseModalClone}
-        onCloseModalCreate={this.onCloseModalCreate}
-        onCloseModalDelete={this.onCloseModalDelete}
-        onCloseModalRename={this.onCloseModalRename}
-        onConfirmActionClone={this.onConfirmActionClone}
-        onConfirmActionCreate={this.onConfirmActionCreate}
-        onConfirmActionDelete={this.onConfirmActionDelete}
-        onConfirmActionRename={this.onConfirmActionRename}
-      />
-
-    </>)
+        {/* Modals */}
+        <ModelModals
+          loading={this.state.loading || this.state.saving}
+          modalClone={this.state.modalClone}
+          modalCloneName={this.state.modalCloneName}
+          modalCreate={this.state.modalCreate}
+          modalCreateName={this.state.modalCreateName}
+          modalDelete={this.state.modalDelete}
+          modalRename={this.state.modalRename}
+          modalRenameName={this.state.modalRenameName}
+          onChangeModalClone={this.onChangeModalClone}
+          onChangeModalCreate={this.onChangeModalCreate}
+          onChangeModalRename={this.onChangeModalRename}
+          onCloseModalClone={this.onCloseModalClone}
+          onCloseModalCreate={this.onCloseModalCreate}
+          onCloseModalDelete={this.onCloseModalDelete}
+          onCloseModalRename={this.onCloseModalRename}
+          onConfirmActionClone={this.onConfirmActionClone}
+          onConfirmActionCreate={this.onConfirmActionCreate}
+          onConfirmActionDelete={this.onConfirmActionDelete}
+          onConfirmActionRename={this.onConfirmActionRename}
+        />
+      </>
+    )
   }
 }

@@ -1,20 +1,15 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import {
-  EuiBadge,
-  EuiCode,
-  EuiText
-} from '@elastic/eui'
+import { EuiBadge, EuiCode, EuiText } from '@elastic/eui'
 
 import { ModelSectionAbstract } from './model_section_abstract.js'
 
 export class ModelSectionAttributes extends ModelSectionAbstract {
-
   constructor(props) {
     super(props)
     this.state = {
-      ...this.state
+      ...this.state,
     }
 
     // Must be one of 'attributes', 'resolvers', 'matchers', or 'indices'.
@@ -23,7 +18,7 @@ export class ModelSectionAttributes extends ModelSectionAbstract {
     // The default object when creating a new attribute.
     this.defaultObject = {
       type: 'string',
-      score: 0.5
+      score: 0.5,
     }
 
     // Columns to display in the selection table.
@@ -33,7 +28,7 @@ export class ModelSectionAttributes extends ModelSectionAbstract {
         name: 'Type',
         sortable: true,
         truncateText: true,
-        render: (value) => (<EuiText>{value ? value : 'string'}</EuiText>)
+        render: (value) => <EuiText>{value ? value : 'string'}</EuiText>,
       },
       {
         field: 'score',
@@ -82,46 +77,78 @@ export class ModelSectionAttributes extends ModelSectionAbstract {
             }
             return (
               <EuiText>
-                {value != null ? <>{value.toFixed(4)} {badge}</> : <EuiCode>null</EuiCode>}
+                {value != null ? (
+                  <>
+                    {value.toFixed(4)} {badge}
+                  </>
+                ) : (
+                  <EuiCode>null</EuiCode>
+                )}
               </EuiText>
             )
           } catch (e) {
             console.error(e)
-            return (<></>)
+            return <></>
           }
-        }
+        },
       },
       {
         field: 'params',
         name: 'Params',
         sortable: false,
         truncateText: true,
-        render: (value) => (<EuiText>{value ? <EuiCode>{JSON.stringify(value)}</EuiCode> : <EuiCode>null</EuiCode>}</EuiText>)
-      }
+        render: (value) => (
+          <EuiText>{value ? <EuiCode>{JSON.stringify(value)}</EuiCode> : <EuiCode>null</EuiCode>}</EuiText>
+        ),
+      },
     ]
 
     // Validation checks to display in the main panel content.
     this.validations = [
       {
-        check: (attribute) => (attribute.score == 1.0),
+        check: (attribute) => attribute.score == 1.0,
         level: 'warning',
-        text: (<>An attribute score of <b>1.0</b> will cause the final identity confidence score to always be <b>1.0</b>, regardless of the scores of other matching attributes. Consider keeping every attribute score under <b>1.0</b> to prevent any single attribute from dictating the final identity confidence score.</>),
+        text: (
+          <>
+            An attribute score of <b>1.0</b> will cause the final identity confidence score to always be <b>1.0</b>,
+            regardless of the scores of other matching attributes. Consider keeping every attribute score under{' '}
+            <b>1.0</b> to prevent any single attribute from dictating the final identity confidence score.
+          </>
+        ),
       },
       {
-        check: (attribute) => (attribute.score == 0.0),
+        check: (attribute) => attribute.score == 0.0,
         level: 'warning',
-        text: (<>An attribute score of <b>0.0</b> will cause the final identity confidence score to always be <b>0.0</b>, regardless of the scores of other matching attributes. Consider keeping every attribute score above <b>0.0</b> to prevent any single attribute from dictating the final identity confidence score.</>),
+        text: (
+          <>
+            An attribute score of <b>0.0</b> will cause the final identity confidence score to always be <b>0.0</b>,
+            regardless of the scores of other matching attributes. Consider keeping every attribute score above{' '}
+            <b>0.0</b> to prevent any single attribute from dictating the final identity confidence score.
+          </>
+        ),
       },
       {
-        check: (attribute) => (attribute.score < 0.5 && attribute.score > 0.0),
+        check: (attribute) => attribute.score < 0.5 && attribute.score > 0.0,
         level: 'warning',
-        text: (<>An attribute score of <b>less than 0.5</b> will penalize the final identity confidence score. Consider keeping every attribute score <b>above 0.5</b> to ensure that every matched attribute contributes to a greater level of confidence in the matched document.</>),
+        text: (
+          <>
+            An attribute score of <b>less than 0.5</b> will penalize the final identity confidence score. Consider
+            keeping every attribute score <b>above 0.5</b> to ensure that every matched attribute contributes to a
+            greater level of confidence in the matched document.
+          </>
+        ),
       },
       {
-        check: (attribute) => (attribute.score == 0.5),
+        check: (attribute) => attribute.score == 0.5,
         level: 'info',
-        text: (<>An attribute score of <b>0.5</b> will never affect the final identity confidence score. Consider keeping every attribute score <b>above 0.5</b> to ensure that every matched attribute contributes to a greater level of confidence in the matched document.</>),
-      }
+        text: (
+          <>
+            An attribute score of <b>0.5</b> will never affect the final identity confidence score. Consider keeping
+            every attribute score <b>above 0.5</b> to ensure that every matched attribute contributes to a greater level
+            of confidence in the matched document.
+          </>
+        ),
+      },
     ]
   }
 
@@ -130,12 +157,11 @@ export class ModelSectionAttributes extends ModelSectionAbstract {
    * Return the modified modelCopy.
    */
   onDelete(modelCopy, nameDeleted) {
-
     // Verify that the action can be done.
     // It cannot be referenced by any resolvers or index fields.
     const references = {
       resolvers: [],
-      indices: []
+      indices: [],
     }
     for (var resolverName in modelCopy.resolvers) {
       var resolver = modelCopy.resolvers[resolverName]
@@ -144,9 +170,7 @@ export class ModelSectionAttributes extends ModelSectionAbstract {
         if (resolver.attributes[i] === nameDeleted)
           references.resolvers.push(
             <div>
-              <Link to={`/models/${this.props.modelId}/resolvers/${resolverName}`}>
-                {resolverName}
-              </Link>
+              <Link to={`/models/${this.props.modelId}/resolvers/${resolverName}`}>{resolverName}</Link>
             </div>
           )
       }
@@ -171,36 +195,36 @@ export class ModelSectionAttributes extends ModelSectionAbstract {
         text: (
           <>
             <p>
-              '{nameDeleted}' is referenced by other objects in this entity model. Deleting it would change or invalidate them.
+              '{nameDeleted}' is referenced by other objects in this entity model. Deleting it would change or
+              invalidate them.
             </p>
             <div style={{ overflowX: 'auto', whiteSpace: 'nowrap', width: '100%' }}>
-            { references.resolvers.length > 0 &&
-              <p>
-                <div>
-                  <b>Resolvers</b>
-                </div>
-                {references.resolvers}
-              </p>
-            }
-            { references.indices.length > 0 &&
-              <p>
-                <div>
-                  <b>Index Fields</b>
-                </div>
-                {references.indices}
-              </p>
-            }
+              {references.resolvers.length > 0 && (
+                <p>
+                  <div>
+                    <b>Resolvers</b>
+                  </div>
+                  {references.resolvers}
+                </p>
+              )}
+              {references.indices.length > 0 && (
+                <p>
+                  <div>
+                    <b>Index Fields</b>
+                  </div>
+                  {references.indices}
+                </p>
+              )}
             </div>
           </>
-        )
+        ),
       }
     }
 
     // Reconstruct the attributes.
     var attributes = {}
     for (var name in modelCopy.attributes) {
-      if (name !== nameDeleted)
-        attributes[name] = modelCopy.attributes[name]
+      if (name !== nameDeleted) attributes[name] = modelCopy.attributes[name]
     }
     modelCopy.attributes = attributes
     return modelCopy
@@ -211,14 +235,11 @@ export class ModelSectionAttributes extends ModelSectionAbstract {
    * Return the modified modelCopy.
    */
   onRename(modelCopy, nameNew, nameOld) {
-
     // Reconstruct the attributes
     var attributes = {}
     for (var name in modelCopy.attributes) {
-      if (name === nameOld)
-        attributes[nameNew] = modelCopy.attributes[name]
-      else
-        attributes[name] = modelCopy.attributes[name]
+      if (name === nameOld) attributes[nameNew] = modelCopy.attributes[name]
+      else attributes[name] = modelCopy.attributes[name]
     }
     modelCopy.attributes = attributes
 
@@ -228,10 +249,8 @@ export class ModelSectionAttributes extends ModelSectionAbstract {
       var resolverAttributes = []
       for (var i in resolver.attributes) {
         const name = resolver.attributes[i]
-        if (name === nameOld)
-          resolverAttributes.push(nameNew)
-        else
-          resolverAttributes.push(name)
+        if (name === nameOld) resolverAttributes.push(nameNew)
+        else resolverAttributes.push(name)
       }
       modelCopy.resolvers[r].attributes = resolverAttributes
     }
@@ -241,8 +260,7 @@ export class ModelSectionAttributes extends ModelSectionAbstract {
       var index = modelCopy.indices[i]
       for (var f in index.fields) {
         var field = index.fields[f]
-        if (field.attribute === nameOld)
-          modelCopy.indices[i].fields[f].attribute = nameNew
+        if (field.attribute === nameOld) modelCopy.indices[i].fields[f].attribute = nameNew
       }
     }
 

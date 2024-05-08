@@ -19,7 +19,6 @@ import {
 const utils = require('../../utils')
 
 export class ExploreExplanation extends React.Component {
-
   constructor(props) {
     super(props)
 
@@ -30,9 +29,8 @@ export class ExploreExplanation extends React.Component {
     this.state = {
       documents: documents,
       request: request,
-      steps: steps
+      steps: steps,
     }
-
   }
 
   // When the parent updates the documents, update this state.
@@ -44,7 +42,7 @@ export class ExploreExplanation extends React.Component {
       this.setState({
         documents: documents,
         request: request,
-        steps: steps
+        steps: steps,
       })
     }
   }
@@ -65,7 +63,6 @@ export class ExploreExplanation extends React.Component {
   }
 
   resetSteps(documents, request) {
-
     // Determine which attribute values are newly discovered on a given query.
     const newAttrValueTracker = {}
 
@@ -77,7 +74,7 @@ export class ExploreExplanation extends React.Component {
       if (queries[qid] === undefined)
         queries[qid] = {
           _index: document._index,
-          hits: []
+          hits: [],
         }
       queries[qid].hits.push(document)
     }
@@ -91,24 +88,23 @@ export class ExploreExplanation extends React.Component {
         const value = request.data.attributes[attributeName]['values'][0] // TODO: Handle many
 
         // Mark values as known.
-        if (newAttrValueTracker[attributeName] === undefined)
-          newAttrValueTracker[attributeName] = {}
+        if (newAttrValueTracker[attributeName] === undefined) newAttrValueTracker[attributeName] = {}
         if (value !== null && value.trim() !== '' && newAttrValueTracker[attributeName][value] === undefined) {
           newAttrValueTracker[attributeName][value] = true
         }
 
-        const _attribute = <EuiFlexGroup key={utils.uniqueKey()}>
+        const _attribute = (
+          <EuiFlexGroup key={utils.uniqueKey()}>
             <EuiFlexItem grow={1}>
-              <EuiText size='s' color='subdued'>
+              <EuiText size="s" color="subdued">
                 {attributeName}
               </EuiText>
             </EuiFlexItem>
             <EuiFlexItem grow={9}>
-              <EuiText size='s'>
-                {value}
-              </EuiText>
+              <EuiText size="s">{value}</EuiText>
             </EuiFlexItem>
           </EuiFlexGroup>
+        )
         attributes.push(_attribute)
       }
     }
@@ -118,13 +114,13 @@ export class ExploreExplanation extends React.Component {
     if (request.data.terms) {
       for (var i in request.data.terms) {
         const value = request.data.terms[i]
-        const _term = <EuiFlexGroup key={utils.uniqueKey()}>
+        const _term = (
+          <EuiFlexGroup key={utils.uniqueKey()}>
             <EuiFlexItem grow={10}>
-              <EuiText size='s'>
-                {value}
-              </EuiText>
+              <EuiText size="s">{value}</EuiText>
             </EuiFlexItem>
           </EuiFlexGroup>
+        )
         terms.push(_term)
       }
     }
@@ -135,51 +131,54 @@ export class ExploreExplanation extends React.Component {
       status: 'incomplete',
       title: 'User input received.',
       titleSize: 's',
-      children: <EuiPanel>
-        <EuiAccordion
-          buttonContent={
-            <EuiText size='s'>
-              <EuiIcon type='document'/> User input
-            </EuiText>
-          }
-          id={utils.uniqueKey()}
-          initialIsOpen={true}
-          paddingSize='l'>
+      children: (
+        <EuiPanel>
+          <EuiAccordion
+            buttonContent={
+              <EuiText size="s">
+                <EuiIcon type="document" /> User input
+              </EuiText>
+            }
+            id={utils.uniqueKey()}
+            initialIsOpen={true}
+            paddingSize="l"
+          >
+            {attributes.length > 0 && (
+              <EuiAccordion
+                buttonContent={
+                  <EuiTitle size="m">
+                    <EuiText size="m">
+                      <h3>Attributes</h3>
+                    </EuiText>
+                  </EuiTitle>
+                }
+                id={'input.attributes'}
+                initialIsOpen={true}
+                paddingSize="l"
+              >
+                {attributes}
+              </EuiAccordion>
+            )}
 
-          {attributes.length > 0 &&
-            <EuiAccordion
-              buttonContent={
-                <EuiTitle size='m'>
-                  <EuiText size='m'>
-                    <h3>Attributes</h3>
-                  </EuiText>
-                </EuiTitle>
-              }
-              id={'input.attributes'}
-              initialIsOpen={true}
-              paddingSize='l'>
-              {attributes}
-            </EuiAccordion>
-          }
-
-          {terms.length > 0 &&
-            <EuiAccordion
-              buttonContent={
-                <EuiTitle size='m'>
-                  <EuiText size='m'>
-                    <h3>Terms</h3>
-                  </EuiText>
-                </EuiTitle>
-              }
-              id={'input.terms'}
-              initialIsOpen={true}
-              paddingSize='l'>
-              {terms}
-            </EuiAccordion>
-          }
-
-        </EuiAccordion>
-      </EuiPanel>
+            {terms.length > 0 && (
+              <EuiAccordion
+                buttonContent={
+                  <EuiTitle size="m">
+                    <EuiText size="m">
+                      <h3>Terms</h3>
+                    </EuiText>
+                  </EuiTitle>
+                }
+                id={'input.terms'}
+                initialIsOpen={true}
+                paddingSize="l"
+              >
+                {terms}
+              </EuiAccordion>
+            )}
+          </EuiAccordion>
+        </EuiPanel>
+      ),
     }
     steps.push(input)
 
@@ -199,23 +198,23 @@ export class ExploreExplanation extends React.Component {
           const attributes = []
           for (var a in hit._explanation.resolvers[resolverName].attributes) {
             const attributeName = hit._explanation.resolvers[resolverName].attributes[a]
-            const attribute = <div key={utils.uniqueKey()}>
-              <EuiBadge color='hollow'>{attributeName}</EuiBadge>
-            </div>
+            const attribute = (
+              <div key={utils.uniqueKey()}>
+                <EuiBadge color="hollow">{attributeName}</EuiBadge>
+              </div>
+            )
             attributes.push(attribute)
           }
-          const resolver = <EuiFlexGroup key={utils.uniqueKey()}>
+          const resolver = (
+            <EuiFlexGroup key={utils.uniqueKey()}>
               <EuiFlexItem grow={1}>
-                <EuiText size='s'>
-                  {resolverName}
-                </EuiText>
+                <EuiText size="s">{resolverName}</EuiText>
               </EuiFlexItem>
               <EuiFlexItem grow={9}>
-                <EuiText size='s'>
-                  {attributes}
-                </EuiText>
+                <EuiText size="s">{attributes}</EuiText>
               </EuiFlexItem>
             </EuiFlexGroup>
+          )
           resolvers.push(resolver)
         }
 
@@ -230,7 +229,7 @@ export class ExploreExplanation extends React.Component {
             target_value: match.target_value,
             input_value: match.input_value,
             matcher: match.input_matcher,
-            matcher_params: match.input_matcher_params
+            matcher_params: match.input_matcher_params,
           }
           matches.push(row)
         }
@@ -238,33 +237,33 @@ export class ExploreExplanation extends React.Component {
           {
             field: 'attribute',
             name: 'Attribute',
-            render: (value) => ( <EuiText size='s'>{value}</EuiText> )
+            render: (value) => <EuiText size="s">{value}</EuiText>,
           },
           {
             field: 'target_field',
             name: 'Index Field',
-            render: (value) => ( <EuiText size='s'>{value}</EuiText> )
+            render: (value) => <EuiText size="s">{value}</EuiText>,
           },
           {
             field: 'target_value',
             name: 'Index Value',
-            render: (value) => ( <EuiText size='s'>{value}</EuiText> )
+            render: (value) => <EuiText size="s">{value}</EuiText>,
           },
           {
             field: 'input_value',
             name: 'Input Value',
-            render: (value) => ( <EuiText size='s'>{value}</EuiText> )
+            render: (value) => <EuiText size="s">{value}</EuiText>,
           },
           {
             field: 'matcher',
             name: 'Matcher',
-            render: (value) => ( <EuiText size='s'>{value}</EuiText> )
+            render: (value) => <EuiText size="s">{value}</EuiText>,
           },
           {
             field: 'matcher_params',
             name: 'Matcher Params',
-            render: (value) => ( <EuiText size='s'>{JSON.stringify(value)}</EuiText> )
-          }
+            render: (value) => <EuiText size="s">{JSON.stringify(value)}</EuiText>,
+          },
         ]
 
         // Attributes
@@ -274,48 +273,58 @@ export class ExploreExplanation extends React.Component {
 
           // Determine if the attribute value is newly discovered on this query.
           var newValue = false
-          if (newAttrValueTracker[attributeName] === undefined)
-            newAttrValueTracker[attributeName] = {}
+          if (newAttrValueTracker[attributeName] === undefined) newAttrValueTracker[attributeName] = {}
           if (value !== null && value.trim() !== '' && newAttrValueTracker[attributeName][value] === undefined) {
             newValue = true
             newAttrValueTracker[attributeName][value] = true
           }
 
-          const _attribute = <EuiFlexGroup key={utils.uniqueKey()}>
+          const _attribute = (
+            <EuiFlexGroup key={utils.uniqueKey()}>
               <EuiFlexItem grow={1}>
-                <EuiText size='s' color='subdued'>
+                <EuiText size="s" color="subdued">
                   {attributeName}
                 </EuiText>
               </EuiFlexItem>
               <EuiFlexItem grow={9}>
-                <EuiText size='s'>
-                  {value} {newValue && <EuiBadge color='#fea27f'><span style={{ 'fontSize': '9px' }}>NEW</span></EuiBadge>}
+                <EuiText size="s">
+                  {value}{' '}
+                  {newValue && (
+                    <EuiBadge color="#fea27f">
+                      <span style={{ fontSize: '9px' }}>NEW</span>
+                    </EuiBadge>
+                  )}
                 </EuiText>
               </EuiFlexItem>
             </EuiFlexGroup>
+          )
           attributes.push(_attribute)
         }
 
         // Document (hit)
-        const doc = <div key={utils.uniqueKey()}>
-          <EuiPanel>
-            <EuiAccordion
-              buttonContent=<EuiText size='s'><EuiIcon type='document'/> {hit._id}</EuiText>
-              id={'hit.' + query._index + '.' + hit._id}
-              initialIsOpen={true}
-              paddingSize='l'>
-
+        const doc = (
+          <div key={utils.uniqueKey()}>
+            <EuiPanel>
+              <EuiAccordion
+                buttonContent=<EuiText size="s">
+                  <EuiIcon type="document" /> {hit._id}
+                </EuiText>
+                id={'hit.' + query._index + '.' + hit._id}
+                initialIsOpen={true}
+                paddingSize="l"
+              >
                 <EuiAccordion
                   buttonContent={
-                    <EuiTitle size='m'>
-                      <EuiText size='m'>
+                    <EuiTitle size="m">
+                      <EuiText size="m">
                         <h3>Attributes</h3>
                       </EuiText>
                     </EuiTitle>
                   }
                   id={'hit.' + query._index + '.' + hit._id + '.attributes'}
                   initialIsOpen={true}
-                  paddingSize='l'>
+                  paddingSize="l"
+                >
                   {attributes}
                 </EuiAccordion>
 
@@ -326,15 +335,16 @@ export class ExploreExplanation extends React.Component {
                 {/* If not in matches, omit matcher and input value */}
                 <EuiAccordion
                   buttonContent={
-                    <EuiTitle size='m'>
-                      <EuiText size='m'>
+                    <EuiTitle size="m">
+                      <EuiText size="m">
                         <h3>Matches</h3>
                       </EuiText>
                     </EuiTitle>
                   }
                   id={'hit.' + query._index + '.' + hit._id + '.matches'}
                   initialIsOpen={false}
-                  paddingSize='l'>
+                  paddingSize="l"
+                >
                   <EuiInMemoryTable
                     columns={columns}
                     compressed={true}
@@ -346,24 +356,23 @@ export class ExploreExplanation extends React.Component {
 
                 <EuiAccordion
                   buttonContent={
-                    <EuiTitle size='m'>
-                      <EuiText size='m'>
+                    <EuiTitle size="m">
+                      <EuiText size="m">
                         <h3>Resolvers</h3>
                       </EuiText>
                     </EuiTitle>
                   }
                   id={'hit.' + query._index + '.' + hit._id + '.resolvers'}
                   initialIsOpen={false}
-                  paddingSize='l'>
+                  paddingSize="l"
+                >
                   {resolvers}
                 </EuiAccordion>
-
-            </EuiAccordion>
-          </EuiPanel>
-          {h+1 < query.hits.length &&
-            <EuiSpacer/>
-          }
-        </div>
+              </EuiAccordion>
+            </EuiPanel>
+            {h + 1 < query.hits.length && <EuiSpacer />}
+          </div>
+        )
         hits.push(doc)
       }
 
@@ -372,9 +381,7 @@ export class ExploreExplanation extends React.Component {
         key: utils.uniqueKey(),
         title: query._index + ' (' + query.hits.length + ' hit' + (query.hits.length !== 1 ? 's' : '') + ')',
         titleSize: 's',
-        children: <>
-          {hits}
-        </>
+        children: <>{hits}</>,
       }
       steps.push(step)
     }
@@ -385,22 +392,22 @@ export class ExploreExplanation extends React.Component {
       status: 'complete',
       title: 'No more matches found.',
       titleSize: 's',
-      children: <></>
+      children: <></>,
     }
     steps.push(end)
     return steps
   }
 
   render() {
-
-    return (<>
-      <EuiFlexGroup gutterSize='m'>
-        <EuiFlexItem grow={false} style={{ width: '0px' }}>
-        </EuiFlexItem>
-        <EuiFlexItem grow={true}>
-          <EuiSteps steps={this.state.steps} firstStepNumber={0}/>
-        </EuiFlexItem>
-      </EuiFlexGroup>
-    </>)
+    return (
+      <>
+        <EuiFlexGroup gutterSize="m">
+          <EuiFlexItem grow={false} style={{ width: '0px' }}></EuiFlexItem>
+          <EuiFlexItem grow={true}>
+            <EuiSteps steps={this.state.steps} firstStepNumber={0} />
+          </EuiFlexItem>
+        </EuiFlexGroup>
+      </>
+    )
   }
 }

@@ -14,7 +14,7 @@ import {
   EuiFlyoutHeader,
   EuiSpacer,
   EuiTitle,
-  EuiToolTip
+  EuiToolTip,
 } from '@elastic/eui'
 
 import { ModelModals } from '../model_modals'
@@ -30,7 +30,6 @@ import { ModelValidations } from '../model_validations'
  * onClose  // Function to close the flyout editor
  */
 export class ModelFlyoutAbstract extends React.Component {
-
   constructor(props) {
     super(props)
     this.state = {
@@ -38,8 +37,8 @@ export class ModelFlyoutAbstract extends React.Component {
       name: this.props.name, // Name of the object being created or edited
 
       // Modal state
-      modalRename: null,    // Name of the object to be renamed
-      modalRenameName: '',  // New name of the object to be renamed
+      modalRename: null, // Name of the object to be renamed
+      modalRenameName: '', // New name of the object to be renamed
     }
 
     // Must be implemented by child class.
@@ -50,7 +49,7 @@ export class ModelFlyoutAbstract extends React.Component {
     this.renderBody = this.renderBody.bind(this)
 
     // Size of the flyout
-    this.size='m'
+    this.size = 'm'
 
     // Modal functions
     this.onConfirmActionRename = this.onConfirmActionRename.bind(this)
@@ -82,7 +81,7 @@ export class ModelFlyoutAbstract extends React.Component {
     this.setState({
       name: nameNew,
       modalRename: null,
-      modalRenameName: null
+      modalRenameName: null,
     })
   }
 
@@ -126,126 +125,120 @@ export class ModelFlyoutAbstract extends React.Component {
    * Content to render in the flyout.
    */
   render() {
-    return (<>
-      <EuiFlyout
-        ownFocus
-        onClose={this.props.onClose}
-        hideCloseButton
-        size={this.size}
-        aria-labelledby='flyoutComplicatedTitle'>
-
-        {/* Header */}
-        <EuiFlyoutHeader hasBorder>
-          <EuiFlexGroup gutterSize='none' responsive={false}>
-
-            {/* Top left */}
-            <EuiFlexItem grow={true}>
-              <EuiFlexGroup alignItems='center' gutterSize='m' responsive={false}>
-                {/* Name of attribute, resolver, matcher, or index */}
-                <EuiFlexItem grow={false}>
-                  <EuiTitle>
-                    <h2>{this.state.name}</h2>
-                  </EuiTitle>
-                </EuiFlexItem>
-                {/* Rename button */}
-                <EuiFlexItem grow={false}>
-                  <EuiButtonEmpty
-                    iconType='pencil'
-                    color='text'
-                    size='s'
-                    onClick={(e) => this.onShowModalRename(e.currentTarget.name)}
-                    name={this.state.name}>
-                    Rename
-                  </EuiButtonEmpty>
-                </EuiFlexItem>
-              </EuiFlexGroup>
-            </EuiFlexItem>
-
-            {/* Top right */}
-            {/* These buttons are relevant only when editing an existing object. */}
-            { !this.props.creating &&
-            <EuiFlexItem grow={false}>
-              <EuiFlexGroup alignItems='center' gutterSize='m' responsive={false}>
-                {/* Clone button */}
-                <EuiFlexItem grow={false}>
-                  <EuiToolTip content='Clone'>
-                    <EuiButtonIcon
-                      aria-label='Clone'
-                      iconType='copy'
-                      color='text'
-                      size='s'
-                      onClick={(e) => this.props.onShowModalClone(e.currentTarget.name)}
-                      name={this.state.name}>
-                    </EuiButtonIcon>
-                  </EuiToolTip>
-                </EuiFlexItem>
-                {/* Delete button */}
-                <EuiFlexItem grow={false}>
-                  <EuiToolTip content='Delete'>
-                    <EuiButtonIcon
-                      aria-label='Delete'
-                      iconType='trash'
-                      color='danger'
-                      size='s'
-                      onClick={(e) => this.props.onShowModalDelete(e.currentTarget.name)}
+    return (
+      <>
+        <EuiFlyout
+          ownFocus
+          onClose={this.props.onClose}
+          hideCloseButton
+          size={this.size}
+          aria-labelledby="flyoutComplicatedTitle"
+        >
+          {/* Header */}
+          <EuiFlyoutHeader hasBorder>
+            <EuiFlexGroup gutterSize="none" responsive={false}>
+              {/* Top left */}
+              <EuiFlexItem grow={true}>
+                <EuiFlexGroup alignItems="center" gutterSize="m" responsive={false}>
+                  {/* Name of attribute, resolver, matcher, or index */}
+                  <EuiFlexItem grow={false}>
+                    <EuiTitle>
+                      <h2>{this.state.name}</h2>
+                    </EuiTitle>
+                  </EuiFlexItem>
+                  {/* Rename button */}
+                  <EuiFlexItem grow={false}>
+                    <EuiButtonEmpty
+                      iconType="pencil"
+                      color="text"
+                      size="s"
+                      onClick={(e) => this.onShowModalRename(e.currentTarget.name)}
                       name={this.state.name}
-                      style={{ opacity: '0.8' }}>
-                    </EuiButtonIcon>
-                  </EuiToolTip>
+                    >
+                      Rename
+                    </EuiButtonEmpty>
+                  </EuiFlexItem>
+                </EuiFlexGroup>
+              </EuiFlexItem>
+
+              {/* Top right */}
+              {/* These buttons are relevant only when editing an existing object. */}
+              {!this.props.creating && (
+                <EuiFlexItem grow={false}>
+                  <EuiFlexGroup alignItems="center" gutterSize="m" responsive={false}>
+                    {/* Clone button */}
+                    <EuiFlexItem grow={false}>
+                      <EuiToolTip content="Clone">
+                        <EuiButtonIcon
+                          aria-label="Clone"
+                          iconType="copy"
+                          color="text"
+                          size="s"
+                          onClick={(e) => this.props.onShowModalClone(e.currentTarget.name)}
+                          name={this.state.name}
+                        ></EuiButtonIcon>
+                      </EuiToolTip>
+                    </EuiFlexItem>
+                    {/* Delete button */}
+                    <EuiFlexItem grow={false}>
+                      <EuiToolTip content="Delete">
+                        <EuiButtonIcon
+                          aria-label="Delete"
+                          iconType="trash"
+                          color="danger"
+                          size="s"
+                          onClick={(e) => this.props.onShowModalDelete(e.currentTarget.name)}
+                          name={this.state.name}
+                          style={{ opacity: '0.8' }}
+                        ></EuiButtonIcon>
+                      </EuiToolTip>
+                    </EuiFlexItem>
+                  </EuiFlexGroup>
                 </EuiFlexItem>
-              </EuiFlexGroup>
-            </EuiFlexItem>
-          }
+              )}
+            </EuiFlexGroup>
+          </EuiFlyoutHeader>
 
-          </EuiFlexGroup>
+          {/*  Body*/}
+          <EuiFlyoutBody>
+            {this.renderBody()}
 
-        </EuiFlyoutHeader>
+            {/* Validations */}
+            <EuiSpacer />
+            <ModelValidations validations={this.props.validations} section={this.state.data} state={this.state} />
+          </EuiFlyoutBody>
 
-        {/*  Body*/}
-        <EuiFlyoutBody>
-          {this.renderBody()}
+          {/* Footer */}
+          <EuiFlyoutFooter>
+            <EuiFlexGroup justifyContent="spaceBetween" responsive={false}>
+              <EuiFlexItem grow={false}>
+                <EuiButtonEmpty iconType="cross" onClick={this.props.onClose} flush="left">
+                  Cancel
+                </EuiButtonEmpty>
+              </EuiFlexItem>
+              <EuiFlexItem grow={false}>
+                <EuiButton
+                  fill
+                  isDisabled={this.isInvalid() || (!this.props.creating && !this.isChanged())}
+                  onClick={this.onApply}
+                >
+                  Apply
+                </EuiButton>
+              </EuiFlexItem>
+            </EuiFlexGroup>
+          </EuiFlyoutFooter>
+        </EuiFlyout>
 
-          {/* Validations */}
-          <EuiSpacer />
-          <ModelValidations
-            validations={this.props.validations}
-            section={this.state.data}
-            state={this.state}
-          />
-        </EuiFlyoutBody>
-
-        {/* Footer */}
-        <EuiFlyoutFooter>
-          <EuiFlexGroup justifyContent='spaceBetween' responsive={false}>
-            <EuiFlexItem grow={false}>
-              <EuiButtonEmpty
-                iconType='cross'
-                onClick={this.props.onClose}
-                flush='left'>
-                Cancel
-              </EuiButtonEmpty>
-            </EuiFlexItem>
-            <EuiFlexItem grow={false}>
-              <EuiButton
-                fill
-                isDisabled={this.isInvalid() || (!this.props.creating && !this.isChanged())}
-                onClick={this.onApply} >
-                Apply
-              </EuiButton>
-            </EuiFlexItem>
-          </EuiFlexGroup>
-        </EuiFlyoutFooter>
-      </EuiFlyout>
-
-      {/* Modals */}
-      <ModelModals
-        loading={(this.props.loading || this.props.saving)}
-        modalRename={this.state.modalRename}
-        modalRenameName={this.state.modalRenameName}
-        onChangeModalRename={this.onChangeModalRename}
-        onCloseModalRename={this.onCloseModalRename}
-        onConfirmActionRename={this.onConfirmActionRename}
-      />
-    </>)
+        {/* Modals */}
+        <ModelModals
+          loading={this.props.loading || this.props.saving}
+          modalRename={this.state.modalRename}
+          modalRenameName={this.state.modalRenameName}
+          onChangeModalRename={this.onChangeModalRename}
+          onCloseModalRename={this.onCloseModalRename}
+          onConfirmActionRename={this.onConfirmActionRename}
+        />
+      </>
+    )
   }
 }

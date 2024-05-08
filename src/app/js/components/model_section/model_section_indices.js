@@ -1,11 +1,10 @@
 import { ModelSectionAbstract } from './model_section_abstract.js'
 
 export class ModelSectionIndices extends ModelSectionAbstract {
-
   constructor(props) {
     super(props)
     this.state = {
-      ...this.state
+      ...this.state,
     }
 
     // Must be one of 'attributes', 'resolvers', 'matchers', or 'indices'.
@@ -13,7 +12,7 @@ export class ModelSectionIndices extends ModelSectionAbstract {
 
     // The default object when creating a new indx.
     this.defaultObject = {
-      fields: {}
+      fields: {},
     }
 
     // Columns to display in the selection table.
@@ -28,12 +27,9 @@ export class ModelSectionIndices extends ModelSectionAbstract {
    * Return the modified modelCopy.
    */
   onDelete(modelCopy, nameDeleted) {
-
     // Reconstruct the indices.
     var indices = {}
-    for (var name in modelCopy.indices)
-      if (name !== nameDeleted)
-        indices[name] = modelCopy.indices[name]
+    for (var name in modelCopy.indices) if (name !== nameDeleted) indices[name] = modelCopy.indices[name]
     modelCopy.indices = indices
     return modelCopy
   }
@@ -43,17 +39,13 @@ export class ModelSectionIndices extends ModelSectionAbstract {
    * Return the modified modelCopy.
    */
   onRename(modelCopy, nameNew, nameOld) {
-
     // Reconstruct the indices
     var indices = {}
     for (var name in modelCopy.indices) {
-      if (name === nameOld)
-        indices[nameNew] = modelCopy.indices[name]
-      else
-        indices[name] = modelCopy.indices[name]
+      if (name === nameOld) indices[nameNew] = modelCopy.indices[name]
+      else indices[name] = modelCopy.indices[name]
     }
     modelCopy.indices = indices
     return modelCopy
   }
-
 }

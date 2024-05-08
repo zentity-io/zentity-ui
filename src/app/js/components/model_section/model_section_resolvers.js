@@ -2,22 +2,15 @@ import React from 'react'
 
 import { get } from 'lodash'
 
-import {
-  EuiBadge,
-  EuiCode,
-  EuiFlexGroup,
-  EuiFlexItem,
-  EuiText,
-} from '@elastic/eui'
+import { EuiBadge, EuiCode, EuiFlexGroup, EuiFlexItem, EuiText } from '@elastic/eui'
 
 import { ModelSectionAbstract } from './model_section_abstract.js'
 
 export class ModelSectionResolvers extends ModelSectionAbstract {
-
   constructor(props) {
     super(props)
     this.state = {
-      ...this.state
+      ...this.state,
     }
 
     // Must be one of 'attributes', 'resolvers', 'matchers', or 'indices'.
@@ -26,23 +19,21 @@ export class ModelSectionResolvers extends ModelSectionAbstract {
     // The default object when creating a new resolver.
     this.defaultObject = {
       attributes: [],
-      weight: 0
+      weight: 0,
     }
 
     // TODO: Code is duplicated in ModelFlyoutResolvers.
     // Move to a shared location.
     this.computeResolverScore = (resolverAttributes, modelAttributes) => {
       const attributeScores = []
-      for (var i in (resolverAttributes || [])) {
+      for (var i in resolverAttributes || []) {
         const attributeName = resolverAttributes[i]
         const attributeScore = get(modelAttributes, `${attributeName}.score`) || null
-        if (attributeScore !== null)
-          attributeScores.push(attributeScore)
+        if (attributeScore !== null) attributeScores.push(attributeScore)
       }
-      if (attributeScores.length === 0)
-        return null
-      const attributeScoresProduct = attributeScores.reduce((a, b)=> a * b, 1)
-      const attributeScoresProductInverse = attributeScores.reduce((a, b)=> a * (1.0 - b), 1)
+      if (attributeScores.length === 0) return null
+      const attributeScoresProduct = attributeScores.reduce((a, b) => a * b, 1)
+      const attributeScoresProductInverse = attributeScores.reduce((a, b) => a * (1.0 - b), 1)
       const resolverScore = attributeScoresProduct / (attributeScoresProduct + attributeScoresProductInverse)
       return resolverScore
     }
@@ -63,11 +54,11 @@ export class ModelSectionResolvers extends ModelSectionAbstract {
               </EuiFlexItem>
             )
           return (
-            <EuiFlexGroup wrap responsive={false} gutterSize='xs'>
+            <EuiFlexGroup wrap responsive={false} gutterSize="xs">
               {items}
             </EuiFlexGroup>
           )
-        }
+        },
       },
       {
         name: 'Score',
@@ -132,17 +123,17 @@ export class ModelSectionResolvers extends ModelSectionAbstract {
               )
           } catch (e) {
             console.error(e)
-            return (<></>)
+            return <></>
           }
-        }
+        },
       },
       {
         field: 'weight',
         name: 'Weight',
         sortable: true,
         truncateText: true,
-        render: (value) => (<EuiText>{value != null ? value : <EuiCode>null</EuiCode>}</EuiText>)
-      }
+        render: (value) => <EuiText>{value != null ? value : <EuiCode>null</EuiCode>}</EuiText>,
+      },
     ]
 
     // Validation checks to display in the main panel content.
@@ -152,15 +143,23 @@ export class ModelSectionResolvers extends ModelSectionAbstract {
           return (resolver.attributes || []).length === 0
         },
         level: 'error',
-        text: (<>A resolver must have at least one attribute.</>),
+        text: <>A resolver must have at least one attribute.</>,
       },
       {
         check: (resolver) => {
           return (resolver.attributes || []).length === 1
         },
         level: 'info',
-        text: (<>A best practice is to define <a href='https://zentity.io/docs/basic-usage/multiple-attribute-resolution/' target='_blank'>more than one attribute</a> in a resolver to help avoid false matches.</>),
-      }
+        text: (
+          <>
+            A best practice is to define{' '}
+            <a href="https://zentity.io/docs/basic-usage/multiple-attribute-resolution/" target="_blank">
+              more than one attribute
+            </a>{' '}
+            in a resolver to help avoid false matches.
+          </>
+        ),
+      },
     ]
   }
 
@@ -169,12 +168,9 @@ export class ModelSectionResolvers extends ModelSectionAbstract {
    * Return the modified modelCopy.
    */
   onDelete(modelCopy, nameDeleted) {
-
     // Reconstruct the resolvers.
     var resolvers = {}
-    for (var name in modelCopy.resolvers)
-      if (name !== nameDeleted)
-        resolvers[name] = modelCopy.resolvers[name]
+    for (var name in modelCopy.resolvers) if (name !== nameDeleted) resolvers[name] = modelCopy.resolvers[name]
     modelCopy.resolvers = resolvers
     return modelCopy
   }
@@ -184,17 +180,13 @@ export class ModelSectionResolvers extends ModelSectionAbstract {
    * Return the modified modelCopy.
    */
   onRename(modelCopy, nameNew, nameOld) {
-
     // Reconstruct the resolvers
     var resolvers = {}
     for (var name in modelCopy.resolvers) {
-      if (name === nameOld)
-        resolvers[nameNew] = modelCopy.resolvers[name]
-      else
-        resolvers[name] = modelCopy.resolvers[name]
+      if (name === nameOld) resolvers[nameNew] = modelCopy.resolvers[name]
+      else resolvers[name] = modelCopy.resolvers[name]
     }
     modelCopy.resolvers = resolvers
     return modelCopy
   }
-
 }

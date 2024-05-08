@@ -31,11 +31,9 @@ const args = parseArgs(argv.slice(2))
 const overrides = {}
 if (args) {
   for (var key in args) {
-    if (!Array.isArray(args[key]))
-      args[key] = [ args[key] ]
+    if (!Array.isArray(args[key])) args[key] = [args[key]]
     for (var i in args[key]) {
       switch (key) {
-
         // -c  Path to configuration file
         case 'c':
           config['_config.file'] = args[key][i]
@@ -46,8 +44,7 @@ if (args) {
           for (var i in args[key]) {
             const overrideParsed = args[key][i].split('=')
             const overrideKey = overrideParsed[0]
-            if (config[overrideKey] === undefined)
-              console.warn('Unrecognized configuration field: ' + overrideKey)
+            if (config[overrideKey] === undefined) console.warn('Unrecognized configuration field: ' + overrideKey)
             const value = overrideParsed.length > 1 ? overrideParsed.slice(1).join('') : ''
             config[overrideKey] = value
             overrides[overrideKey] = value
@@ -75,7 +72,8 @@ const isTrue = (value) => value === true || String(value).trim() === 'true'
 
 const isFalse = (value) => value === false || String(value).trim() === 'false'
 
-const isNull = (value) => value === undefined || value === null || String(value).trim() === 'null' || String(value).trim() === ''
+const isNull = (value) =>
+  value === undefined || value === null || String(value).trim() === 'null' || String(value).trim() === ''
 
 const parseBoolean = (value) => {
   switch (value) {
@@ -93,18 +91,14 @@ const parseBoolean = (value) => {
 // Parse config file
 const configYaml = load(configFile || {})
 if (configYaml) {
-
   // Only parse keys that exist in the default configuration
   // and don't start with '_'.
   for (var key in config) {
-    if (key.startsWith('_'))
-      continue
+    if (key.startsWith('_')) continue
     if (key in configYaml) {
-      if (overrides[key] !== undefined)
-        continue
+      if (overrides[key] !== undefined) continue
       const value = configYaml[key]
       switch (key) {
-
         // Values that must be integers
         case 'elasticsearch.timeout':
         case 'zentity-ui.port':
@@ -125,10 +119,8 @@ if (configYaml) {
         case 'elasticsearch.tls.key':
         case 'zentity-ui.tls.key':
           if (!isNull(value)) {
-            if (!isAbsolute(value))
-              config[key] = join(__dirname, value)
-            else
-              config[key] = value
+            if (!isAbsolute(value)) config[key] = join(__dirname, value)
+            else config[key] = value
           }
           break
 

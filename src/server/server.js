@@ -17,21 +17,19 @@ if (get('elasticsearch.tls.verification')) {
     globalAgent.options.rejectUnauthorized = false
   } else {
     globalAgent.options.rejectUnauthorized = true
-    if (get('elasticsearch.tls.key'))
-      globalAgent.options.pfx = readFileSync(get('elasticsearch.tls.key'))
-    if (get('elasticsearch.tls.passphrase'))
-      globalAgent.options.passphrase = get('elasticsearch.tls.passphrase')
+    if (get('elasticsearch.tls.key')) globalAgent.options.pfx = readFileSync(get('elasticsearch.tls.key'))
+    if (get('elasticsearch.tls.passphrase')) globalAgent.options.passphrase = get('elasticsearch.tls.passphrase')
   }
 }
 
 // Application
 const app = express()
-const statics = [ '/', '/css*', '/fonts*', '/img*', '/js*' ]
+const statics = ['/', '/css*', '/fonts*', '/img*', '/js*']
 app.use(statics, express.static(join(__dirname, '..', 'app')))
 app.use((req, res, next) => {
   var rawBody = ''
-  req.on('data', (chunk) => rawBody += chunk)
-  req.on('end', () => req.rawBody = rawBody)
+  req.on('data', (chunk) => (rawBody += chunk))
+  req.on('end', () => (req.rawBody = rawBody))
   next()
 })
 app.use(json())
@@ -50,12 +48,12 @@ const esRequest = (opts) => {
     transformResponse: (res) => {
       // Disable JSON parsing to return the exact response from Elasticsearch
       return res
-    }
+    },
   }
   if (get('elasticsearch.username') != null && get('elasticsearch.password') != null)
     optsFinal.auth = {
       username: get('elasticsearch.username'),
-      password: get('elasticsearch.password')
+      password: get('elasticsearch.password'),
     }
   return request(optsFinal)
 }
@@ -69,48 +67,44 @@ app.all('/es*', (req, res) => {
     path: req.params[0],
     params: req.query,
     headers: req.headers,
-    data: req.headers['Content-Type'] === 'application/json' ? req.body : req.rawBody
+    data: req.headers['Content-Type'] === 'application/json' ? req.body : req.rawBody,
   }
-  return esRequest(opts).then((esResponse) => {
-    // Return a response from Elasticsearch.
-    res
-      .status(esResponse.status)
-      .header('Content-Type', 'application/json')
-      .send(esResponse.data)
-  }).catch((error) => {
-    console.error(error)
-    try {
-      // Return an error from Elasticsearch.
-      res
-        .status(error.response.status)
-        .header('Content-Type', 'application/json')
-        .send({
-          error: error.response.statusText,
-          message: error.response.data
-        })
-    } catch (e) {
-      // Return an error not from Elasticsearch.
-      let title = 'Server error'
-      let message = 'Something unexpected happened. Check the zentity-ui server logs for details.'
+  return esRequest(opts)
+    .then((esResponse) => {
+      // Return a response from Elasticsearch.
+      res.status(esResponse.status).header('Content-Type', 'application/json').send(esResponse.data)
+    })
+    .catch((error) => {
+      console.error(error)
       try {
-        let header = error.name || 'Unknown error'
-        if (error.code)
-          header = header + ': ' + error.code
-        message = 'This error occurred when the zentity-ui server sent a request to Elasticsearch:\n\n' + header + '\n' + error.message
+        // Return an error from Elasticsearch.
+        res.status(error.response.status).header('Content-Type', 'application/json').send({
+          error: error.response.statusText,
+          message: error.response.data,
+        })
       } catch (e) {
-        console.warn('Error when creating error message:')
-        console.error(e)
-      } finally {
-        res
-          .status(500)
-          .header('Content-Type', 'text/plain')
-          .send({
+        // Return an error not from Elasticsearch.
+        let title = 'Server error'
+        let message = 'Something unexpected happened. Check the zentity-ui server logs for details.'
+        try {
+          let header = error.name || 'Unknown error'
+          if (error.code) header = header + ': ' + error.code
+          message =
+            'This error occurred when the zentity-ui server sent a request to Elasticsearch:\n\n' +
+            header +
+            '\n' +
+            error.message
+        } catch (e) {
+          console.warn('Error when creating error message:')
+          console.error(e)
+        } finally {
+          res.status(500).header('Content-Type', 'text/plain').send({
             error: title,
-            message: message
+            message: message,
           })
+        }
       }
-    }
-  })
+    })
 })
 
 /**
@@ -128,16 +122,13 @@ const confirmation = () => {
   console.log(`zentity-ui started on ${scheme}://${host}:${port}`)
 }
 if (!get('zentity-ui.tls.enabled')) {
-
   // ...with TLS disabled.
   app.listen(get('zentity-ui.port'), get('zentity-ui.host'), confirmation)
-
 } else {
-
   // ...with TLS enabled.
   const tlsOptions = {
     pfx: readFileSync(get('zentity-ui.tls.key')),
-    passphrase: get('zentity-ui.tls.passphrase')
+    passphrase: get('zentity-ui.tls.passphrase'),
   }
   createServer(tlsOptions, app).listen(get('zentity-ui.port'), get('zentity-ui.host'), confirmation)
 }

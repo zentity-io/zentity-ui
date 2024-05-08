@@ -1,15 +1,7 @@
 // Third party components
 import React from 'react'
-import {
-  HashRouter as Router,
-  Route,
-  Switch
-} from 'react-router-dom'
-import {
-  EuiCodeBlock,
-  EuiGlobalToastList,
-  EuiText
-} from '@elastic/eui'
+import { HashRouter as Router, Route, Switch } from 'react-router-dom'
+import { EuiCodeBlock, EuiGlobalToastList, EuiText } from '@elastic/eui'
 
 // App components
 import { HomePage } from './components/home_page'
@@ -89,33 +81,34 @@ appendIconComponentCache({
   sortUp: EuiIconSortUp,
   training: EuiIconTraining,
   trash: EuiIconTrash,
-  visText: EuiIconVisText
+  visText: EuiIconVisText,
 })
 
 export default class App extends React.Component {
-
   constructor(props) {
     super(props)
     this.state = {
-      toasts: []
+      toasts: [],
     }
     this.onAddToast = this.onAddToast.bind(this)
     this.onRemoveToast = this.onRemoveToast.bind(this)
   }
 
   componentDidCatch(error, errorInfo) {
+    var title = 'foo'
     var text = 'Unknown error'
     try {
-      if (error.message)
-        title = error.message
-      if (errorInfo.componentStack)
-        text = error.message + errorInfo.componentStack
+      if (errorInfo.componentStack) text = error.message + errorInfo.componentStack
     } catch (e) {
       console.exception(e)
     }
     this.onAddToast({
       title: <EuiText>{error.message}</EuiText>,
-      text: <EuiCodeBlock isCopyable style={{ maxHeight: '200px' }}>{text}</EuiCodeBlock>
+      text: (
+        <EuiCodeBlock isCopyable style={{ maxHeight: '200px' }}>
+          {text}
+        </EuiCodeBlock>
+      ),
     })
   }
 
@@ -125,7 +118,7 @@ export default class App extends React.Component {
       title: toast.title,
       color: toast.color || 'danger',
       iconType: toast.iconType || 'alert',
-      text: toast.text
+      text: toast.text,
     }
     this.setState({
       toasts: this.state.toasts.concat(_toast),
@@ -133,49 +126,36 @@ export default class App extends React.Component {
   }
 
   onRemoveToast(removedToast) {
-    this.setState(prevState => ({
-      toasts: prevState.toasts.filter(toast => toast.id !== removedToast.id),
+    this.setState((prevState) => ({
+      toasts: prevState.toasts.filter((toast) => toast.id !== removedToast.id),
     }))
   }
 
   render() {
     return (
       <Router>
-
         {/* Page header */}
         <PageHeader />
 
         {/* Page content */}
         <Switch>
-          <Route path='/' exact render={(props) => (
-            <HomePage {...props} onAddToast={this.onAddToast} />
-          )}/>
-          <Route path='/models/:model_id/:tab/:selected' render={(props) => (
-            <ModelPage {...props} onAddToast={this.onAddToast} />
-          )}/>
-          <Route path='/models/:model_id/:tab' render={(props) => (
-            <ModelPage {...props} onAddToast={this.onAddToast} />
-          )}/>
-          <Route path='/models/:model_id' render={(props) => (
-            <ModelPage {...props} onAddToast={this.onAddToast} />
-          )}/>
-          <Route path='/models' render={(props) => (
-            <ModelsPage {...props} onAddToast={this.onAddToast} />
-          )}/>
-          <Route path='/explore' render={(props) => (
-            <ExplorePage {...props} onAddToast={this.onAddToast} />
-          )}/>
-          <Route path='*' render={(props) => (
-            <ErrorPage {...props} onAddToast={this.onAddToast} />
-          )}/>
+          <Route path="/" exact render={(props) => <HomePage {...props} onAddToast={this.onAddToast} />} />
+          <Route
+            path="/models/:model_id/:tab/:selected"
+            render={(props) => <ModelPage {...props} onAddToast={this.onAddToast} />}
+          />
+          <Route
+            path="/models/:model_id/:tab"
+            render={(props) => <ModelPage {...props} onAddToast={this.onAddToast} />}
+          />
+          <Route path="/models/:model_id" render={(props) => <ModelPage {...props} onAddToast={this.onAddToast} />} />
+          <Route path="/models" render={(props) => <ModelsPage {...props} onAddToast={this.onAddToast} />} />
+          <Route path="/explore" render={(props) => <ExplorePage {...props} onAddToast={this.onAddToast} />} />
+          <Route path="*" render={(props) => <ErrorPage {...props} onAddToast={this.onAddToast} />} />
         </Switch>
 
         {/* Toasts */}
-        <EuiGlobalToastList
-          toasts={this.state.toasts}
-          dismissToast={this.onRemoveToast}
-          toastLifeTimeMs={10000}
-        />
+        <EuiGlobalToastList toasts={this.state.toasts} dismissToast={this.onRemoveToast} toastLifeTimeMs={10000} />
       </Router>
     )
   }

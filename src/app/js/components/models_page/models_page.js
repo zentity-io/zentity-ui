@@ -1,29 +1,23 @@
 // Third-party components
 import React from 'react'
-import {
-  EuiPage,
-  EuiPageBody,
-  EuiSpacer,
-  EuiTitle
-} from '@elastic/eui'
+import { EuiPage, EuiPageBody, EuiSpacer, EuiTitle } from '@elastic/eui'
 
 // App components
 import { ModelsTable } from '../models_table'
 
 export class ModelsPage extends React.Component {
-
   constructor(props) {
     super(props)
   }
 
   render() {
     return (
-      <EuiPage className='zentity-models'>
+      <EuiPage className="zentity-models">
         <EuiPageBody>
-          <EuiTitle size='l'>
+          <EuiTitle size="l">
             <h1>Entity models</h1>
           </EuiTitle>
-          <EuiSpacer size='m' />
+          <EuiSpacer size="m" />
           <ModelsTable onAddToast={this.props.onAddToast} />
         </EuiPageBody>
       </EuiPage>
